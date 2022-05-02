@@ -4,8 +4,10 @@ require_once 'config.php';
 
 /**
  *  Singleton to connect db
- *  Using singelton here makes sure that whe only have 1 instance of the db object no matter how many times we create one
- *  Having multiple db objects can cause performance issues (probalby not on this small application) but i wanted to try this out
+ *  Using singelton here makes sure that whe only have 1 instance of the db object 
+ *  no matter how many times we create one
+ *  Having multiple db objects can cause performance issues 
+ *  (probalby not on this small application) but i wanted to try this out
  *  Singelton Pattern is known for making unittest a nightmare but we dont have unittest so who cares
  */
 
@@ -26,13 +28,13 @@ class ConnectDb
         // test if an instance can be created
         try {
             $this->conn = new PDO(
-                "mysql:host={$this->host};
-                dbname={$this->name}",
+                "mysql:host={$this->host};dbname={$this->name}",
                 $this->user,
                 $this->pass
             );
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $Exception) {
-            return $Exception;
+            $_SESSION["error"] = $Exception;
         }
     }
 
@@ -77,6 +79,7 @@ class Auth
         if (!empty($result)) {
             if (password_verify($password, $result["passwort"])) {
                 if ($result["login_attepms"] >= 3) {
+                    $_SESSION['error'] = 'Account Locked please contact Side Admin';
                     return false;
                 }
                 $_SESSION["username"] = $username;
