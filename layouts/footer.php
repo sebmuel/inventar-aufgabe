@@ -26,3 +26,5 @@
 
 
 <?php
+// clear messages
+unset($_SESSION['messages']);

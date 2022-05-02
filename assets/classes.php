@@ -79,7 +79,7 @@ class Auth
         if (!empty($result)) {
             if (password_verify($password, $result["passwort"])) {
                 if ($result["login_attepms"] >= 3) {
-                    $_SESSION['error'] = 'Account Locked please contact Side Admin';
+                    $_SESSION['message'] = 'This is Account is locked please contact Page Admin';
                     return false;
                 }
                 $_SESSION["username"] = $username;
@@ -87,9 +87,10 @@ class Auth
                 $this->setLoginAttemps($username, "0");
                 return true;
             }
-
             $this->setLoginAttemps($username, $result["login_attepms"] + 1);
             return false;
+        } else {
+            $_SESSION['message'] = "Account Locked please contact Side Admin";
         }
     }
 

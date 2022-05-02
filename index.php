@@ -2,7 +2,6 @@
 $siteTitle = 'Login';
 include_once './layouts/header.php';
 
-
 if ((isset($_SESSION['error']))) {
     echo $_SESSION['error'];
 }
@@ -13,12 +12,10 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
     // user tries to login
 } else {
     if ($_POST) {
-        $logged = $auth->login(htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["password"]));
+        echo 'test';
+        $auth->login(htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["password"]));
         header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
         exit();
-        if ($logged) {
-            header("Location: " . ENTRY);
-        }
     }
 }
 
