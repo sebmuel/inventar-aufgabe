@@ -1,85 +1,121 @@
 /** Nav & Jumpbton Styles **/
 
 .jumbotron {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 36px;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 36px;
 }
 
 .jumbotron,
 #sidebar {
-    background: lightgray;
+  background: lightgray;
 }
 
 #content {
-    display: flex;
-    align-items: stretch;
+  display: flex;
+  align-items: stretch;
 }
 
 #sidebar {
-    min-width: 350px;
-    max-width: 350px;
-    height: calc(100vh - 210px);
-    padding: 8px;
-    list-style: none;
+  min-width: 350px;
+  max-width: 350px;
+  height: calc(100vh - 210px);
+  padding: 8px;
+  list-style: none;
+}
+
+/* message container */
+
+#message {
+  position: absolute;
+  top: 210px;
+  right: -230px;
+  opacity: 0;
+  background: #c77777;
+  padding: 16px 36px;
+  color: white;
+  border-radius: 50px;
+}
+
+#message.toggle {
+  display: block;
+  animation: show-message 500ms linear;
+  right: 0;
+  opacity: 1;
 }
 
 nav {
-    list-style: none;
+  list-style: none;
 }
 
 .content-inner {
-    width: 100%;
-    max-width: 80%;
-    margin: 0 auto;
-    padding: 60px 0;
+  width: 100%;
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 60px 0;
 }
 
 .dropdown {
-    display: none;
-    padding-left: 12px;
+  display: none;
+  padding-left: 12px;
 }
 
 .dropdown a {
-    text-decoration: none;
-    color: #000;
-    transition: color 200ms ease-in-out;
+  text-decoration: none;
+  color: #000;
+  transition: color 200ms ease-in-out;
 }
 
 .dropdown a:hover {
-    color: gray;
+  color: gray;
 }
 
-nav>div {
-    padding: 10px 0;
-    border: 1px solid #000;
-    border-width: 0 0 1px 0;
-    cursor: pointer;
+nav > div {
+  padding: 10px 0;
+  border: 1px solid #000;
+  border-width: 0 0 1px 0;
+  cursor: pointer;
 }
 
-nav>div:first-of-type {
-    border-width: 1px 0 1px 0;
+nav > div:first-of-type {
+  border-width: 1px 0 1px 0;
 }
 
-div.has-dropdown>span {
-    pointer-events: none;
-    font-size: 20px;
+div.has-dropdown > span {
+  pointer-events: none;
+  font-size: 20px;
 }
 
 div.dropdown.open {
-    display: block;
+  display: block;
 }
 
 .logout-form {
-    padding-bottom: 36px;
-    text-align: center;
+  padding-bottom: 36px;
+  text-align: center;
 }
 
 /*** Form Styling **/
 
 .form-wrapper {
-    max-width: 500px;
-    margin: 0 auto;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/** key frames **/
+
+/* message animation */
+
+@keyframes show-message {
+  from {
+    opacity: 0;
+    right: -230px;
+  }
+
+  to {
+    opacity: 1;
+    right: 0;
+  }
 }

@@ -58,6 +58,8 @@ class ConnectDb
 
 /**
  * Auth Class
+ * $instance = create instance or get instance
+ * $conn = get the PDO object from the instance
  */
 
 class Auth
@@ -73,24 +75,36 @@ class Auth
         $this->conn = $this->instance->getConnection();
     }
 
+    /**
+     * Login
+     * $username = string
+     * $password = string
+     */
     public function login(String $username, String $password)
     {
+        // get user data from db
         $result = $this->getUser($username);
+        // check if user exists
         if (!empty($result)) {
+            // user exists -> validate password
             if (password_verify($password, $result["passwort"])) {
+                // check if account is locked
                 if ($result["login_attepms"] >= 3) {
                     $_SESSION['message'] = 'This is Account is locked please contact Page Admin';
                     return false;
                 }
+                // set session Variables
                 $_SESSION["username"] = $username;
                 $_SESSION["logged_in"] = true;
+                // setLoginAttemps to 0
                 $this->setLoginAttemps($username, "0");
                 return true;
             }
+            // user does not exist -> increase login attemps +1 
             $this->setLoginAttemps($username, $result["login_attepms"] + 1);
             return false;
         } else {
-            $_SESSION['message'] = "Account Locked please contact Side Admin";
+            $_SESSION['message'] = "Unter dem Namen $username existiert kein Account";
         }
     }
 

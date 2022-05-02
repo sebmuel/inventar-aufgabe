@@ -2,18 +2,20 @@
 $siteTitle = 'Login';
 include_once './layouts/header.php';
 
-if ((isset($_SESSION['error']))) {
-    echo $_SESSION['error'];
-}
 
-// user already logged in
+
+// user already logged in -> redirect to ENTRY Page
 if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
     header("Location: " . ENTRY);
+
     // user tries to login
 } else {
     if ($_POST) {
-        echo 'test';
-        $auth->login(htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["password"]));
+        // filter var MIGHT be redundant in PHP 8.1
+        // sanatize input
+        $username = filter_var(htmlspecialchars($_POST["username"]), FILTER_SANITIZE_STRING);
+        $password = filter_var(htmlspecialchars($_POST["password"]), FILTER_SANITIZE_STRING);
+        $auth->login($username, $password);
         header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
         exit();
     }
@@ -23,7 +25,7 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
 
 
 <div class="content-inner">
-    <div class="form-wrapper">
+    <div class="form-wrapper get">
         <h2>Login</h2>
         <form action="" method="post">
             <div class="mb-3">

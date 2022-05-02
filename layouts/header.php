@@ -29,7 +29,12 @@ $auth = new Auth();
 </head>
 
 <body>
-
+    <?php
+    // render message template when message exists
+    if (isset($_SESSION["message"])) {
+        include_once 'message.php';
+    }
+    ?>
     <div class="jumbotron">
 
         <img src="<?php echo LOGO; ?>">
