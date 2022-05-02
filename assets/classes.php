@@ -33,8 +33,8 @@ class ConnectDb
                 $this->pass
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $Exception) {
-            $_SESSION["error"] = $Exception;
+        } catch (PDOException $erro) {
+            $_SESSION["message"] = "Verbindung zur Datenbank nicht möglich <br> Überprüfen sie die config datei!<br>";
         }
     }
 
