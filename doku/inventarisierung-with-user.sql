@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Erstellungszeit: 02. Mai 2022 um 09:50
+-- Erstellungszeit: 02. Mai 2022 um 15:21
 -- Server-Version: 8.0.27-0ubuntu0.20.04.1
 -- PHP-Version: 7.4.3
 
@@ -86,6 +86,13 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
+-- Daten für Tabelle `Users`
+--
+
+INSERT INTO `Users` (`u_id`, `username`, `passwort`, `login_attepms`) VALUES
+(1, 'admin', '$2y$10$Or0XzXWJtOTgTO19TTF1NOd4TTFx5W4p8mMmvW3/t6K67jiIj35cu', 0);
+
+--
 -- Indizes der exportierten Tabellen
 --
 
@@ -154,7 +161,7 @@ ALTER TABLE `Inventartypen`
 -- AUTO_INCREMENT für Tabelle `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `u_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `u_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints der exportierten Tabellen
