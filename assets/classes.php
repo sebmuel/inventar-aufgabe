@@ -73,11 +73,7 @@ class Auth
 
     public function login(String $username, String $password)
     {
-        $pdo = $this->conn;
-        $statement = $pdo->prepare("SELECT * FROM Users WHERE username Like ?");
-        $statement->execute(array($username));
-        $result = $statement->fetch();
-
+        $result = $this->getUser($username);
         if (!empty($result)) {
             if (password_verify($password, $result["passwort"])) {
                 if ($result["login_attepms"] >= 3) {
@@ -108,5 +104,24 @@ class Auth
         $pdo = $this->conn;
         $statement = $pdo->prepare("UPDATE Users SET login_attepms = $attemps WHERE username Like ?");
         $statement->execute(array($username));
+    }
+
+
+    public function register($username, $password)
+    {
+        $nameAvailable = $this->getUser($username) && true;
+    }
+
+    private function getHash($password)
+    {
+    }
+
+    private function getUser($username)
+    {
+        $pdo = $this->conn;
+        $statement = $pdo->prepare("SELECT * FROM Users WHERE username Like ?");
+        $statement->execute(array($username));
+        $result = $statement->fetch();
+        return $result;
     }
 }
