@@ -2,6 +2,4 @@
 
 ---
 
-Diagramme ... Database, Classdiagram - schriftlich
-Anlegen Datenbank --- done check again with db diagramm
-Anlegen Layout - Header | Content | Footer
+1. reformat logIn method to only have one check

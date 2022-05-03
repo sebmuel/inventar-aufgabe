@@ -27,23 +27,31 @@ class ConnectDb
     {
         return new PDO("mysql:dbname=" . ConnectDb::$name . ";host=" . ConnectDb::$host, ConnectDb::$user, ConnectDb::$pass);
     }
+
+    public static function store($statement, $prepare)
+    {
+        $pdo = self::getDbObject();
+        $sql = $statement;
+        $sql = $pdo->prepare($prepare);
+    }
 }
 
-
 /**
- * Auth Class
- * $instance = create instance or get instance
- * $conn = get the PDO object from the instance
+ * Auth
  */
-
 class Auth
 {
+
+
     /**
-     * Login
-     * $username = string
-     * $password = string
+     * login
+     * Method to log the user in
+     * 
+     * @param  string $username
+     * @param  string $password
+     * @return void
      */
-    public function login(String $username, String $password)
+    public function login(string $username, string $password)
     {
         // get user data from db
         $result = $this->getUser($username);
@@ -72,6 +80,12 @@ class Auth
         }
     }
 
+    /**
+     * loggedIn
+     * Checks if the user is logged and taking action if not
+     * 
+     * @return void
+     */
     public function loggedIn()
     {
         if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
@@ -81,6 +95,15 @@ class Auth
         }
     }
 
+
+
+    /**
+     * setLoginAttemps
+     *
+     * @param  string $username
+     * @param  string $attemps
+     * @return void
+     */
     public function setLoginAttemps(string $username, string $attemps)
     {
         $pdo = ConnectDb::getDbObject();
@@ -90,6 +113,13 @@ class Auth
     }
 
 
+    /**
+     * register
+     *
+     * @param  string $username
+     * @param  string $password
+     * @return void
+     */
     public function register($username, $password)
     {
         $nameAvailable = $this->getUser($username);
@@ -117,6 +147,12 @@ class Auth
     }
 
 
+    /**
+     * listUsers
+     * retrive all users
+     * 
+     * @return array
+     */
     public function listUsers()
     {
         $pdo = ConnectDb::getDbObject();
@@ -127,6 +163,14 @@ class Auth
         return $result;
     }
 
+
+    /**
+     * getUser
+     * get one specific user
+     * 
+     * @param  string $username
+     * @return array
+     */
     private function getUser($username)
     {
         $pdo = ConnectDb::getDbObject();
@@ -137,6 +181,13 @@ class Auth
         return $result;
     }
 
+    /**
+     * deleteUser
+     * delete selected user
+     * 
+     * @param  string $username
+     * @return void
+     */
     public function deleteUser($username)
     {
         try {
@@ -149,6 +200,14 @@ class Auth
         }
     }
 
+    /**
+     * saveUser
+     * save a single user
+     * 
+     * @param  string $username
+     * @param  string $hash
+     * @return void
+     */
     private function saveUser($username, $hash)
     {
         $pdo = ConnectDb::getDbObject();
@@ -156,5 +215,33 @@ class Auth
         $statement->execute(array($username, $hash, 0));
         $_SESSION["message"] = "Benutzer $username angelegt!";
         $pdo = null;
+    }
+}
+
+
+class InventarTypen
+{
+    public function saveInventarTyp($name)
+    {
+        $matches = count($this->getInventarTyp($name));
+        echo $matches;
+        if ($matches > 0) {
+            return;
+        }
+        $pdo = ConnectDb::getDbObject();
+        $statement = $pdo->prepare("INSERT INTO Inventartypen (typ_name) VALUES ?");
+        $statement->execute(array($name));
+        echo $name;
+        $pdo = null;
+    }
+
+    private function getInventarTyp($name)
+    {
+        $pdo = ConnectDb::getDbObject();
+        $statement = $pdo->prepare("SELECT * FROM Inventartypen WHERE typ_name LIKE ?");
+        $statement->execute(array($name));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $pdo = null;
+        return $result;
     }
 }
