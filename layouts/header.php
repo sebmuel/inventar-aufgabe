@@ -63,8 +63,8 @@ $auth = new Auth();
                 <div class="has-dropdown">
                     <span>Bearbeite Abteilungen</span>
                     <div class="dropdown">
-                        <div><a href="/abteilung-hinzufuegen.php">Abteilung Hinzufügen</a></div>
-                        <div><a href="/abteilung-loeschen.php">Abteilung Löschen</a></div>
+                        <div><a href="/abteilung-erstellen.php">Abteilung Hinzufügen</a></div>
+                        <div><a href="/abteilung-entfernen.php">Abteilung Löschen</a></div>
                     </div>
                 </div>
                 <div class="has-dropdown">

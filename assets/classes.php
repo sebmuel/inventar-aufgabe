@@ -294,13 +294,13 @@ class InventarTypen
 
 class Filiale
 {
-    public function save($filiale)
+    public function saveFiliale($filiale)
     {
         if (strlen($filiale) <= MINLENGTH) {
             $_SESSION["message"] = "Eingabe zu Kurz mind. " . MINLENGTH . " Zeichen";
             return;
         }
-        $matches = $this->get($filiale);
+        $matches = $this->getFiliale($filiale);
         if ($matches) {
             $_SESSION["message"] = "Typ $filiale existiert bereits";
             return;
@@ -311,10 +311,10 @@ class Filiale
         $_SESSION["message"] = "Typ: $filiale angelegt !";
     }
 
-    private function get($filiale)
+    private function getFiliale($filiale)
     {
 
-        $statement = "SELECT * FROM Inventartypen WHERE typ_name LIKE ?";
+        $statement = "SELECT * FROM Filiale WHERE filiale LIKE ?";
         $prepare = array($filiale);
         $result = ConnectDb::load($statement, $prepare, true);
         return $result;
@@ -322,16 +322,16 @@ class Filiale
 
     public function getAll()
     {
-        $statement = "SELECT * FROM Inventartypen";
+        $statement = "SELECT * FROM Filialen";
         $result = ConnectDb::load($statement);
         return $result;
     }
 
-    public function deleteType($name)
+    public function deleteFiliale($filiale)
     {
-        $statement = "DELETE FROM Inventartypen WHERE typ_name LIKE ?";
-        $prepare = array($name);
+        $statement = "DELETE FROM Filialen WHERE filiale LIKE ?";
+        $prepare = array($filiale);
         ConnectDb::store($statement, $prepare);
-        $_SESSION["message"] = "Typ $name gelöscht!";
+        $_SESSION["message"] = "Filiale $filiale gelöscht!";
     }
 }
