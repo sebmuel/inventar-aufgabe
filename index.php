@@ -13,8 +13,8 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
     if ($_POST) {
         // filter var MIGHT be redundant in PHP 8.1
         // sanatize input
-        $username = filter_var(htmlspecialchars($_POST["username"]), FILTER_SANITIZE_STRING);
-        $password = filter_var(htmlspecialchars($_POST["password"]), FILTER_SANITIZE_STRING);
+        $username = htmlspecialchars($_POST["username"]);
+        $password = htmlspecialchars($_POST["password"]);
         $auth->login($username, $password);
         header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
         exit();

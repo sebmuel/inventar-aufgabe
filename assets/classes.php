@@ -33,8 +33,8 @@ class ConnectDb
                 $this->pass
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $erro) {
-            $_SESSION["message"] = "Verbindung zur Datenbank nicht möglich <br> Überprüfen sie die config datei!<br>";
+        } catch (PDOException $err) {
+            $_SESSION["message"] = $err->getMessage();
         }
     }
 
@@ -66,8 +66,6 @@ class Auth
 {
     private $instance;
     private $conn;
-    private $accountStatus;
-
 
     public function __construct()
     {
@@ -90,7 +88,7 @@ class Auth
             if (password_verify($password, $result["passwort"])) {
                 // check if account is locked
                 if ($result["login_attepms"] >= 3) {
-                    $_SESSION['message'] = 'This is Account is locked please contact Page Admin';
+                    $_SESSION['message'] = "Account ist gesperrt Bitte kontaktieren sie den Page Admin";
                     return false;
                 }
                 // set session Variables
@@ -102,9 +100,10 @@ class Auth
             }
             // user does not exist -> increase login attemps +1 
             $this->setLoginAttemps($username, $result["login_attepms"] + 1);
+            $_SESSION["message"] = "Kombination aus Passwort und Username ist falsch!";
             return false;
         } else {
-            $_SESSION['message'] = "Unter dem Namen $username existiert kein Account";
+            $_SESSION["message"] = "Unter dem Namen $username existiert kein Account";
         }
     }
 
