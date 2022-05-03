@@ -125,8 +125,6 @@ class Auth
         }
     }
 
-
-
     /**
      * setLoginAttemps
      *
@@ -136,11 +134,14 @@ class Auth
      */
     public function setLoginAttemps(string $username, string $attemps)
     {
+        if ($username === $_SESSION["username"]) {
+            $_SESSION["message"] = "Sie können den Account nicht Sperren wenn sie eingeloggt sind";
+            return;
+        }
         $statement = "UPDATE Users SET login_attepms = $attemps WHERE username Like ?";
         $prepare = array($username);
         ConnectDb::store($statement, $prepare);
     }
-
 
     /**
      * register
@@ -174,7 +175,6 @@ class Auth
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $this->saveUser($username, $hash);
     }
-
 
     /**
      * listUsers
@@ -215,6 +215,11 @@ class Auth
      */
     public function deleteUser($username)
     {
+        // check if the user is trying to delete the account he is logged in with
+        if ($username === $_SESSION["username"]) {
+            $_SESSION["message"] = "Sie können den Account nicht löschen wenn sie eingeloggt sind";
+            return;
+        }
         $statement = "DELETE FROM Users WHERE username LIKE ?";
         $prepare = array($username);
         ConnectDb::store($statement, $prepare);
@@ -239,29 +244,94 @@ class Auth
 }
 
 
+/**
+ * InventarTypen
+ */
 class InventarTypen
 {
     public function saveInventarTyp($name)
     {
-        $matches = count($this->getInventarTyp($name));
-        echo $matches;
-        if ($matches > 0) {
+        if (strlen($name) <= MINLENGTH) {
+            $_SESSION["message"] = "Eingabe zu Kurz mind. " . MINLENGTH . " Zeichen";
             return;
         }
-        $pdo = ConnectDb::getDbObject();
-        $statement = $pdo->prepare("INSERT INTO Inventartypen (typ_name) VALUES ?");
-        $statement->execute(array($name));
-        echo $name;
-        $pdo = null;
+        $matches = $this->getInventarTyp($name);
+        if ($matches) {
+            $_SESSION["message"] = "Typ $name existiert bereits";
+            return;
+        }
+        $statement = "INSERT INTO Inventartypen (typ_name) VALUES (?)";
+        $prepare = array($name);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Typ: $name angelegt !";
     }
 
     private function getInventarTyp($name)
     {
-        $pdo = ConnectDb::getDbObject();
-        $statement = $pdo->prepare("SELECT * FROM Inventartypen WHERE typ_name LIKE ?");
-        $statement->execute(array($name));
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $pdo = null;
+
+        $statement = "SELECT * FROM Inventartypen WHERE typ_name LIKE ?";
+        $prepare = array($name);
+        $result = ConnectDb::load($statement, $prepare, true);
         return $result;
+    }
+
+    public function getAll()
+    {
+        $statement = "SELECT * FROM Inventartypen";
+        $result = ConnectDb::load($statement);
+        return $result;
+    }
+
+    public function deleteType($name)
+    {
+        $statement = "DELETE FROM Inventartypen WHERE typ_name LIKE ?";
+        $prepare = array($name);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Typ $name gelöscht!";
+    }
+}
+
+
+class Filiale
+{
+    public function save($filiale)
+    {
+        if (strlen($filiale) <= MINLENGTH) {
+            $_SESSION["message"] = "Eingabe zu Kurz mind. " . MINLENGTH . " Zeichen";
+            return;
+        }
+        $matches = $this->get($filiale);
+        if ($matches) {
+            $_SESSION["message"] = "Typ $filiale existiert bereits";
+            return;
+        }
+        $statement = "INSERT INTO Filialen (filiale) VALUES (?)";
+        $prepare = array($filiale);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Typ: $filiale angelegt !";
+    }
+
+    private function get($filiale)
+    {
+
+        $statement = "SELECT * FROM Inventartypen WHERE typ_name LIKE ?";
+        $prepare = array($filiale);
+        $result = ConnectDb::load($statement, $prepare, true);
+        return $result;
+    }
+
+    public function getAll()
+    {
+        $statement = "SELECT * FROM Inventartypen";
+        $result = ConnectDb::load($statement);
+        return $result;
+    }
+
+    public function deleteType($name)
+    {
+        $statement = "DELETE FROM Inventartypen WHERE typ_name LIKE ?";
+        $prepare = array($name);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Typ $name gelöscht!";
     }
 }

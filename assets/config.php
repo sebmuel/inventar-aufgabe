@@ -21,3 +21,9 @@ define('ENTRY', '/inventartyp-erstellen.php');
 define('PWLENGTH', 6);
 // define min username length
 define("USERLENGTH", 4);
+
+// define min values for
+// Inventartyp
+// Filialen
+// Abteilungen
+define("MINLENGTH", 2);

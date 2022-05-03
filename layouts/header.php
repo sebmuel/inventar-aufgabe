@@ -56,8 +56,8 @@ $auth = new Auth();
                 <div class="has-dropdown">
                     <span>Bearbeite Filialen</span>
                     <div class="dropdown">
-                        <div><a href="/filiale-hinzufuegen.php">Filiale Hinzufügen</a></div>
-                        <div><a href="/filiale-loeschen.php">Filiale Löschen</a></div>
+                        <div><a href="/filiale-erstellen.php">Filiale Hinzufügen</a></div>
+                        <div><a href="/filiale-entfernen.php">Filiale Löschen</a></div>
                     </div>
                 </div>
                 <div class="has-dropdown">
