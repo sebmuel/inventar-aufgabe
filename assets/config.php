@@ -19,3 +19,5 @@ define('ENTRY', '/inventartyp-erstellen.php');
 
 // define min password length
 define('PWLENGTH', 6);
+// define min username length
+define("USERLENGTH", 4);
