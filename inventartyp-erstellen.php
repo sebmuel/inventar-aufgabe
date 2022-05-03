@@ -6,7 +6,6 @@ include_once './layouts/header.php';
 $auth->loggedIn();
 // create Inventartyp Object
 $inventartypen = new InventarTypen();
-$inventartypen->saveInventarTyp("Peter");
 
 ?>
 

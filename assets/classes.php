@@ -28,11 +28,41 @@ class ConnectDb
         return new PDO("mysql:dbname=" . ConnectDb::$name . ";host=" . ConnectDb::$host, ConnectDb::$user, ConnectDb::$pass);
     }
 
-    public static function store($statement, $prepare)
+    public static function store($statement, $prepare = array())
     {
-        $pdo = self::getDbObject();
-        $sql = $statement;
-        $sql = $pdo->prepare($prepare);
+
+        try {
+            $pdo = self::getDbObject();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = $statement;
+            $query = $pdo->prepare($sql);
+            $query->execute($prepare);
+        } catch (PDOException $e) {
+            $_SESSION["message"] = $e->getMessage();
+        } finally {
+            $pdo = null;
+        }
+    }
+
+    public static function load($statement, $prepare = array(), $singleRecord = false)
+    {
+        try {
+            $pdo = self::getDbObject();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = $statement;
+            $query = $pdo->prepare($sql);
+            $query->execute($prepare);
+            if ($singleRecord) {
+                $result = $query->fetch();
+            } else {
+                $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            }
+            return $result;
+        } catch (PDOException $e) {
+            $_SESSION["message"] = $e->getMessage();
+        } finally {
+            $pdo = null;
+        }
     }
 }
 
@@ -106,10 +136,9 @@ class Auth
      */
     public function setLoginAttemps(string $username, string $attemps)
     {
-        $pdo = ConnectDb::getDbObject();
-        $statement = $pdo->prepare("UPDATE Users SET login_attepms = $attemps WHERE username Like ?");
-        $statement->execute(array($username));
-        $pdo = null;
+        $statement = "UPDATE Users SET login_attepms = $attemps WHERE username Like ?";
+        $prepare = array($username);
+        ConnectDb::store($statement, $prepare);
     }
 
 
@@ -127,19 +156,19 @@ class Auth
         // check if username already exists
         if (!empty($nameAvailable)) {
             $_SESSION["message"] =  "$username ist schon belegt! Wähle einen anderen Namen";
-            return false;
+            return;
         }
 
         // check if password has minlength
         if (strlen($password) < PWLENGTH) {
             $_SESSION["message"] = "Passwort ist zu kurz min. " . PWLENGTH . " Zeichen";
-            return false;
+            return;
         }
 
         // check if password has minlength
         if (strlen($username) < USERLENGTH) {
-            $_SESSION["message"] = "Username ist zu kurz min. " . PWLENGTH . " Zeichen";
-            return false;
+            $_SESSION["message"] = "Username ist zu kurz min. " . USERLENGTH . " Zeichen";
+            return;
         }
 
         $hash = password_hash($password, PASSWORD_BCRYPT);
@@ -155,11 +184,8 @@ class Auth
      */
     public function listUsers()
     {
-        $pdo = ConnectDb::getDbObject();
-        $statement = $pdo->prepare("SELECT * FROM Users");
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $pdo = null;
+        $statement = "SELECT * FROM Users";
+        $result = ConnectDb::load($statement);
         return $result;
     }
 
@@ -173,11 +199,10 @@ class Auth
      */
     private function getUser($username)
     {
-        $pdo = ConnectDb::getDbObject();
-        $statement = $pdo->prepare("SELECT * FROM Users WHERE username Like ?");
-        $statement->execute(array($username));
-        $result = $statement->fetch();
-        $pdo = null;
+
+        $statement = "SELECT * FROM Users WHERE username Like ?";
+        $prepare = array($username);
+        $result = ConnectDb::load($statement, $prepare, true);
         return $result;
     }
 
@@ -190,14 +215,10 @@ class Auth
      */
     public function deleteUser($username)
     {
-        try {
-            $pdo = ConnectDb::getDbObject();
-            $statement = $pdo->prepare("DELETE FROM Users WHERE username LIKE ?");
-            $statement->execute(array($username));
-            $_SESSION["message"] = "Nutzer $username gelöscht";
-        } catch (PDOException $e) {
-            $_SESSION["message"] = $e->getMessage();
-        }
+        $statement = "DELETE FROM Users WHERE username LIKE ?";
+        $prepare = array($username);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Nutzer $username gelöscht";
     }
 
     /**
@@ -210,11 +231,10 @@ class Auth
      */
     private function saveUser($username, $hash)
     {
-        $pdo = ConnectDb::getDbObject();
-        $statement = $pdo->prepare("INSERT INTO Users (username, passwort, login_attepms) VALUES (?, ?, ?)");
-        $statement->execute(array($username, $hash, 0));
+        $statement = "INSERT INTO Users (username, passwort, login_attepms) VALUES (?, ?, ?)";
+        $prepare = array($username, $hash, 0);
+        ConnectDb::store($statement, $prepare);
         $_SESSION["message"] = "Benutzer $username angelegt!";
-        $pdo = null;
     }
 }
 

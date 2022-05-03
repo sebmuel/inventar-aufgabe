@@ -38,21 +38,13 @@ $auth = new Auth();
     <div class="jumbotron">
 
         <img src="<?php echo LOGO; ?>">
-        <?php if (isset($_SESSION["username"])) {
-            echo "
-                <div>
-                Wilkommen: {$_SESSION['username']}
-                </div>";
-        }
-        ?>
+
         <div>Aktuelle Seite: <?php echo $siteTitle; ?></div>
     </div>
 
     <div id="content">
         <div id="sidebar">
-            <form action="" method="get" class="logout-form">
-                <input type="submit" value="Logout" name="logout">
-            </form>
+            <button><a href="../logout.php">Logout</a></button>
             <nav>
                 <div class="has-dropdown">
                     <span>Bearbeite Inventartypen</span>
