@@ -25,6 +25,7 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
 <div class="content-inner">
     <div class="form-wrapper">
         <h2>Login</h2>
+        <hr>
         <form action="" method="post">
             <div class="mb-3">
                 <input type="username" name="username" placeholder="Username">
@@ -35,6 +36,7 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
             <button type="submit" class="btn btn-primary">Absenden</button>
         </form>
     </div>
+
 </div>
 
 <?php

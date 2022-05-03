@@ -16,15 +16,6 @@ class ConnectDb
 
     public static function getDbObject()
     {
-        try {
-            return ConnectDb::createDataBaseInstance();
-        } catch (PDOException $e) {
-            $_SESSION["message"] = $e->getMessage();
-        }
-    }
-
-    private static function createDataBaseInstance()
-    {
         return new PDO("mysql:dbname=" . ConnectDb::$name . ";host=" . ConnectDb::$host, ConnectDb::$user, ConnectDb::$pass);
     }
 

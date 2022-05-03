@@ -1,4 +1,37 @@
-/** Nav & Jumpbton Styles **/
+/*
+*     1. html, body, reset
+*     2. jumbotron and sidebar
+*     3. Message Box
+*     4. Navigation
+*     5. Forms
+*     6. Key Frames
+*     7. Headlines
+*     @Author: Sebastian Müller
+*/
+
+/*** HTML, BODY, RESET ***/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  margin: 0px;
+  font-family: "Open Sans", sans-serif;
+}
+
+/*** JUMBOTRON AND SIDEBAR ***/
 
 .jumbotron {
   display: flex;
@@ -6,11 +39,25 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 36px;
+  height: 15vh;
+}
+
+.jumbotron h2 {
+  color: #fff;
+  font-weight: 300;
+}
+
+.jumbotron h2 span {
+  text-decoration: underline;
+}
+
+#logo {
+  max-width: 200px;
 }
 
 .jumbotron,
 #sidebar {
-  background: lightgray;
+  background: #212529;
 }
 
 #content {
@@ -21,12 +68,18 @@
 #sidebar {
   min-width: 350px;
   max-width: 350px;
-  height: calc(100vh - 210px);
+  min-height: calc(100vh - 210px);
   padding: 8px;
   list-style: none;
 }
 
-/* message container */
+.sidebar-wrapper {
+  position: fixed;
+  width: 300px;
+  left: 8px;
+}
+
+/*** MESSAGE BOX ***/
 
 #message {
   position: absolute;
@@ -46,15 +99,18 @@
   opacity: 1;
 }
 
+/*** NAVIAGTION ***/
+
 nav {
   list-style: none;
 }
 
 .content-inner {
   width: 100%;
-  max-width: 80%;
   margin: 0 auto;
-  padding: 60px 0;
+  padding: 60px 36px;
+  background: cadetblue;
+  min-height: 85vh;
 }
 
 .dropdown {
@@ -64,7 +120,7 @@ nav {
 
 .dropdown a {
   text-decoration: none;
-  color: #000;
+  color: #fff;
   transition: color 200ms ease-in-out;
 }
 
@@ -74,7 +130,7 @@ nav {
 
 nav > div {
   padding: 10px 0;
-  border: 1px solid #000;
+  border: 1px solid rgba(206, 206, 206, 0.637);
   border-width: 0 0 1px 0;
   cursor: pointer;
 }
@@ -85,7 +141,8 @@ nav > div:first-of-type {
 
 div.has-dropdown > span {
   pointer-events: none;
-  font-size: 20px;
+  font-size: 16px;
+  color: #fff;
 }
 
 div.dropdown.open {
@@ -97,14 +154,70 @@ div.dropdown.open {
   text-align: center;
 }
 
-/*** Form Styling **/
+/*** FORMS ***/
 
 .form-wrapper {
-  max-width: 500px;
+  max-width: 650px;
   margin: 0 auto;
 }
 
-/** key frames **/
+.form-wrapper h2 {
+  color: #fff;
+  font-weight: 300;
+  font-size: 36px;
+  text-align: center;
+}
+
+.form-wrapper form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-wrapper hr {
+  height: 1px;
+  background-color: #fff;
+  border: none;
+  max-width: 300px;
+  margin: 16px auto 54px auto;
+}
+
+.form-wrapper input {
+  background-color: transparent;
+  border: solid #fff;
+  border-width: 0 0 1px 0;
+  width: 100%;
+  margin: 0 0 18px 0;
+  padding-bottom: 5px;
+  color: #fff;
+  font-size: 16px;
+}
+
+.form-wrapper input:focus {
+  outline: none;
+}
+
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #fff;
+  font-size: 16px;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #fff;
+  font-size: 16px;
+}
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #fff;
+  font-size: 16px;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #fff;
+  font-size: 16px;
+}
+
+/*** KEY FRAMES ***/
 
 /* message animation */
 
