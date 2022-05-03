@@ -126,11 +126,27 @@ class Auth
 
     public function register($username, $password)
     {
-        $nameAvailable = $this->getUser($username) && true;
+        $nameAvailable = $this->getUser($username);
+
+        // check if username already exists
+        if (!empty($nameAvailable)) {
+            $_SESSION["message"] =  "$username ist schon belegt! Wähle einen anderen Namen";
+            return false;
+        }
+
+        // check if password has minlength
+        if (strlen($password) < PWLENGTH) {
+            $_SESSION["message"] = "Passwort ist zu kurz min. " . PWLENGTH . " Zeichen";
+            return false;
+        }
+
+        $hash = $this->getHash($password);
+        $this->saveUser($username, $hash);
     }
 
     private function getHash($password)
     {
+        return password_hash($password, PASSWORD_BCRYPT);
     }
 
     private function getUser($username)
@@ -140,5 +156,13 @@ class Auth
         $statement->execute(array($username));
         $result = $statement->fetch();
         return $result;
+    }
+
+    private function saveUser($username, $hash)
+    {
+        $pdo = $this->conn;
+        $statement = $pdo->prepare("INSERT INTO Users (username, passwort, login_attepms) VALUES (?, ?, ?)");
+        $statement->execute(array($username, $hash, 0));
+        $_SESSION["message"] = "Benutzer $username angelegt!";
     }
 }
