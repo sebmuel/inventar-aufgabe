@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["username"]) and isse
 <div class="content-inner">
     <div class="form-wrapper">
         <h2>Nutzer Anlegen</h2>
+        <hr>
         <form action="" method="post">
             <div class="mb-3">
                 <input type="username" name="username" placeholder="Username" required>

@@ -103,13 +103,12 @@ button:hover {
 
 #message {
   position: absolute;
-  top: 210px;
   right: -230px;
   opacity: 0;
   background: #c77777;
   padding: 16px 36px;
   color: white;
-  border-radius: 50px;
+  font-weight: 400;
 }
 
 #message.toggle {
@@ -117,6 +116,7 @@ button:hover {
   animation: show-message 500ms linear;
   right: 0;
   opacity: 1;
+  top: 15vh;
 }
 
 /*** NAVIAGTION ***/
@@ -254,6 +254,12 @@ table {
   width: 100%;
 }
 
+#show-form h2 {
+  text-align: center;
+  color: #fff;
+  padding: 72px 0;
+}
+
 .action {
   text-align: center;
   width: 110px;
@@ -275,7 +281,7 @@ td {
 }
 
 tbody tr {
-  background: darkorchid;
+  background: #c77777;
 }
 
 table {

@@ -8,7 +8,7 @@ $auth->loggedIn();
 $users = $auth->listUsers();
 
 if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
-    // get key and make it string
+    // get string from key
     $key = implode(array_keys($_POST));
     // sanitize
     $key = htmlspecialchars($key);
@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
 
 <div class="content-inner">
     <form id="show-form" action="" method="post">
+        <h2>Liste aller Nutzer: </h2>
         <table id="show-table">
             <thead>
                 <th>Nutzer</th>
