@@ -11,6 +11,10 @@
 
 /*** HTML, BODY, RESET ***/
 
+:root {
+  --black: #212529;
+}
+
 h1,
 h2,
 h3,
@@ -29,6 +33,22 @@ body {
   overflow-x: hidden;
   margin: 0px;
   font-family: "Open Sans", sans-serif;
+}
+
+button {
+  background-color: var(--black);
+  border: 1px solid var(--black);
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 50px;
+  color: #fff;
+  font-weight: 300;
+  transition: all 200ms ease-in-out;
+}
+
+button:hover {
+  color: var(--black);
+  background-color: transparent;
 }
 
 /*** JUMBOTRON AND SIDEBAR ***/
@@ -171,6 +191,10 @@ div.dropdown.open {
 .form-wrapper form {
   max-width: 400px;
   margin: 0 auto;
+  padding: 72px 36px;
+  background: transparent;
+  border-radius: 50px;
+  box-shadow: 1px 2px 3px #000;
 }
 
 .form-wrapper hr {
@@ -183,11 +207,11 @@ div.dropdown.open {
 
 .form-wrapper input {
   background-color: transparent;
-  border: solid #fff;
+  border: solid rgba(255, 255, 255, 0.479);
   border-width: 0 0 1px 0;
   width: 100%;
   margin: 0 0 18px 0;
-  padding-bottom: 5px;
+  padding: 0 10px 5px 10px;
   color: #fff;
   font-size: 16px;
 }
@@ -198,7 +222,7 @@ div.dropdown.open {
 
 ::-webkit-input-placeholder {
   /* Chrome/Opera/Safari */
-  color: #fff;
+  color: rgba(255, 255, 255, 0.527);
   font-size: 16px;
 }
 ::-moz-placeholder {
@@ -215,6 +239,54 @@ div.dropdown.open {
   /* Firefox 18- */
   color: #fff;
   font-size: 16px;
+}
+
+.form-wrapper button {
+  width: 100%;
+  max-width: 150px;
+  margin: 18px auto 0 auto;
+  display: block;
+  font-size: 18px;
+  padding: 10px 0;
+}
+
+table {
+  width: 100%;
+}
+
+.action {
+  text-align: center;
+  width: 110px;
+}
+
+th {
+  background-color: var(--black);
+}
+
+th,
+td {
+  text-align: left;
+  height: 45px;
+}
+
+td {
+  font-weight: 500;
+  padding: 10px;
+}
+
+tbody tr {
+  background: darkorchid;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid var(--black);
+  color: #fff;
 }
 
 /*** KEY FRAMES ***/

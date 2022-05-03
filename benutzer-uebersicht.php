@@ -54,9 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
                         <td>$username</td>
                         <td>$loginAttemps</td>
                         <td>$status</td>
-                        <td><button type="submit" name="delete" value="$username">Löschen</td>
-                        <td><button type="submit" name="lock" value="$username">Sperren</td>
-                        <td><button type="submit" name="unlock" value="$username">Entsperren</td>
+                        <td class="action"><button type="submit" name="delete" value="$username">Löschen</td>
+                        <td class="action"><button type="submit" name="lock" value="$username">Sperren</td>
+                        <td class="action"><button type="submit" name="unlock" value="$username">Entsperren</td>
                     </tr>
                     END;
                 }

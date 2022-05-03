@@ -20,9 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["inventartyp"])) {
 <div class="content-inner">
     <div class="form-wrapper">
         <h2>Inventartyp Anlegen</h2>
+        <hr>
         <form action="" method="post">
             <div class="mb-3">
-                <input type="text" name="inventartyp" placeholder="Inventartyp" required>
+                <input type="text" name="inventartyp" placeholder="Typ Bezeichnung" required>
             </div>
             <button type="submit" class="btn btn-primary">Anlegen</button>
         </form>
