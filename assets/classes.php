@@ -81,7 +81,7 @@ class Auth
         }
     }
 
-    private function setLoginAttemps(string $username, string $attemps)
+    public function setLoginAttemps(string $username, string $attemps)
     {
         $pdo = ConnectDb::getDbObject();
         $statement = $pdo->prepare("UPDATE Users SET login_attepms = $attemps WHERE username Like ?");
