@@ -9,7 +9,7 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
 
     // user tries to login
 } else {
-    if ($_POST) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // sanatize input
         $username = htmlspecialchars($_POST["username"]);
         $password = htmlspecialchars($_POST["password"]);
@@ -18,20 +18,17 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] === true) {
         exit();
     }
 }
-
 ?>
-
-
 <div class="content-inner">
     <div class="form-wrapper">
         <h2>Login</h2>
         <hr>
         <form action="" method="post">
             <div class="mb-3">
-                <input type="username" name="username" placeholder="Username">
+                <input type="username" name="username" placeholder="Username" required>
             </div>
             <div class="mb-3">
-                <input type="password" name="password" placeholder="Password">
+                <input type="password" name="password" placeholder="Password" required>
             </div>
             <button type="submit" class="btn btn-primary">Absenden</button>
         </form>

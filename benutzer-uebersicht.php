@@ -2,12 +2,12 @@
 $siteTitle = 'Benutzer Übersicht';
 include_once './layouts/header.php';
 
-//check if user is logged in 
+// check if user is logged in 
 $auth->loggedIn();
 // grab all users from db
 $users = $auth->listUsers();
 
-if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
+if ($_SERVER["REQUEST_METHOD"] === 'POST' and !empty($_POST)) {
     // get string from key
     $key = implode(array_keys($_POST));
     // sanitize

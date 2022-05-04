@@ -13,10 +13,9 @@ $typen = $inventar->getInventarTyp();
 $abteilungen = $inventar->getAbteilung();
 $filialen = $inventar->getFiliale();
 
-// create current date to determine default date and max date
-$currentDate = date("Y-m-d");
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" and !empty($_POST)) {
     $values['name'] = htmlspecialchars($_POST["name"]);
     $values['typ'] = htmlspecialchars($_POST["typ"]);
     $values['datum'] = htmlspecialchars($_POST["datum"]);
@@ -31,41 +30,49 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
 
 ?>
 <div class="content-inner">
-    <div class="form-wrapper">
-        <h2>Inventar Anlegen</h2>
-        <hr>
-        <form action="" method="post">
-            <input type="text" name="name" placeholder="Gegenstands Name" required>
-            <select name="typ" required>
-                <option value="" selected disabled>Wähle Typ</option>
-                <?php
-                foreach ($typen as $typ) {
-                    echo "<option value=" . $typ["typ_name"] . ">" . $typ["typ_name"] . "</option>";
-                }
-                ?>
-            </select>
-            <input type="date" name="datum" placeholder="Datum der Anschaffung" max="<?php echo $currentDate ?>" value="<?php echo $currentDate ?>">
-            <input type="number" min="0" step="0.01" name="preis" placeholder="Anschaffungspreis: 00.00" required>
-            <input type="number" min="1" step="0" name="dauer" placeholder="Nutzungsdauer in Jahren" required>
-            <select name="abteilung" required>
-                <option value="" selected disabled>Wähle Abteilung</option>
-                <?php
-                foreach ($abteilungen as $abteilung) {
-                    echo "<option value=" . $abteilung["abteilung"] . ">" . $abteilung["abteilung"] . "</option>";
-                }
-                ?>
-            </select>
-            <select name="filiale" required>
-                <option value="" selected disabled>Wähle Filiale</option>
-                <?php
-                foreach ($filialen as $filiale) {
-                    echo "<option value=" . $filiale["filiale"] . ">" . $filiale["filiale"] . "</option>";
-                }
-                ?>
-            </select>
-            <button type="submit" class="btn btn-primary">Anlegen</button>
-        </form>
-    </div>
+    <?php
+    if (empty($typen) or empty($abteilungen) or empty($filialen)) {
+        echo "<h2>Es fehlen Typ, Abteilung oder Filiale zum erzeugen eines Eintrages</h2>";
+    } else {
+    ?>
+        <div class="form-wrapper">
+            <h2>Inventar Anlegen</h2>
+            <hr>
+            <form action="" method="post">
+                <input type="text" name="name" placeholder="Gegenstands Name" required>
+                <select name="typ" required>
+                    <option value="" selected hidden disabled>Wähle Typ</option>
+                    <?php
+                    foreach ($typen as $typ) {
+                        echo "<option value=" . $typ["typ_name"] . ">" . $typ["typ_name"] . "</option>";
+                    }
+                    ?>
+                </select>
+                <input type="date" name="datum" placeholder="Datum der Anschaffung" max="<?php echo $currentDate ?>" value="<?php echo $currentDate ?>">
+                <input type="number" min="0" step="0.01" name="preis" placeholder="Anschaffungspreis: 00.00" required>
+                <input type="number" min="1" step="0" name="dauer" placeholder="Nutzungsdauer in Jahren" required>
+                <select name="abteilung" required>
+                    <option value="" selected hidden disabled>Wähle Abteilung</option>
+                    <?php
+                    foreach ($abteilungen as $abteilung) {
+                        echo "<option value=" . $abteilung["abteilung"] . ">" . $abteilung["abteilung"] . "</option>";
+                    }
+                    ?>
+                </select>
+                <select name="filiale" required>
+                    <option value="" selected hidden disabled>Wähle Filiale</option>
+                    <?php
+                    foreach ($filialen as $filiale) {
+                        echo "<option value=" . $filiale["filiale"] . ">" . $filiale["filiale"] . "</option>";
+                    }
+                    ?>
+                </select>
+                <button type="submit" class="btn btn-primary">Anlegen</button>
+            </form>
+        </div>
+    <?php
+    }
+    ?>
 </div>
 
 

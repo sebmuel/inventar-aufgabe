@@ -14,11 +14,25 @@ class ConnectDb
     private static $pass = DATABASEPASSWORD;
     private static $name = DATABASENAME;
 
+    /**
+     * getDbObject
+     * create PDO Object and hand it to the load and save methods 
+     * 
+     * @return PDO
+     */
     public static function getDbObject()
     {
         return new PDO("mysql:dbname=" . ConnectDb::$name . ";host=" . ConnectDb::$host, ConnectDb::$user, ConnectDb::$pass);
     }
 
+    /**
+     * store
+     * handle the update requests to he database 
+     * 
+     * @param  string $statement A valid SQL STATEMENT
+     * @param  array $prepare  An array with parameters for the PDO->prepare method
+     * @return void
+     */
     public static function store($statement, $prepare = array())
     {
 
@@ -35,6 +49,14 @@ class ConnectDb
         }
     }
 
+    /**
+     * load
+     *
+     * @param  string $statement A valid SQL STATEMENT
+     * @param  array $prepare  An array with parameters for the PDO->prepare method
+     * @param  boolean $singleRecord True will use fetch() instead of fetchAll() default= false
+     * @return void
+     */
     public static function load($statement, $prepare = array(), $singleRecord = false)
     {
         try {
@@ -70,7 +92,7 @@ class Auth
      * 
      * @param  string $username
      * @param  string $password
-     * @return void
+     * @return bool
      */
     public function login(string $username, string $password)
     {
@@ -107,7 +129,6 @@ class Auth
      * loggedIn
      * Checks if the user is logged and taking action if not
      * 
-     * @return void
      */
     public function loggedIn()
     {
@@ -268,6 +289,11 @@ class InventarTypen
         return $result;
     }
 
+    /**
+     * getAll
+     *
+     * @return array
+     */
     public function getAll()
     {
         $statement = "SELECT * FROM Inventartypen";
@@ -357,6 +383,12 @@ class Abteilung
         $_SESSION["message"] = "Abteilung: $abteilung angelegt !";
     }
 
+    /**
+     * getAbteilung
+     *
+     * @param  mixed $abteilung
+     * @return mixed
+     */
     private function getAbteilung($abteilung)
     {
 
@@ -366,6 +398,11 @@ class Abteilung
         return $result;
     }
 
+    /**
+     * getAll
+     *
+     * @return array
+     */
     public function getAll()
     {
         $statement = "SELECT * FROM Abteilungen";
@@ -401,16 +438,31 @@ class Inventar
         $this->filialen = new Filiale();
     }
 
+    /**
+     * getInventarTyp
+     *
+     * @return array
+     */
     public function getInventarTyp()
     {
         return $this->typen->getAll();
     }
 
+    /**
+     * getAbteilung
+     *
+     * @return array
+     */
     public function getAbteilung()
     {
         return $this->abteilungen->getAll();
     }
 
+    /**
+     * getFiliale
+     *
+     * @return array
+     */
     public function getFiliale()
     {
         return $this->filialen->getAll();
@@ -425,6 +477,15 @@ class Inventar
         $_SESSION["message"] = "Inventar " .  $values['name']  . " angelegt!";
     }
 
+    /**
+     * getRecords
+     * Returns a list of Records based on the Selected Options 
+     * 
+     * @param  string $typ
+     * @param  string $abteilung
+     * @param  string $filiale
+     * @return array
+     */
     public function getRecords($typ, $abteilung, $filiale)
     {
         $statement = "SELECT * FROM Inventar WHERE typ LIKE ? AND abteilung LIKE ? AND filiale LIKE ?";

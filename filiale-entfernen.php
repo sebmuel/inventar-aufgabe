@@ -7,40 +7,47 @@ $auth->loggedIn();
 
 // grab all users from db
 $filiale = new Filiale();
-$filialen = $filiale->getAll();
+$records = $filiale->getAll();
 
-if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
+if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["delete"])) {
     $typ = implode($_POST);
     $filiale->deleteFiliale(htmlspecialchars($typ));
     header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
     exit();
 }
-
 ?>
 
 <div class="content-inner">
-    <form id="show-form" action="" method="post">
-        <table id="show-table">
-            <h2>Liste aller Filialen</h2>
-            <thead>
-                <th>Filiale</th>
-                <th>Löschen</th>
-            </thead>
-            <tbody>
-                <?php
-                foreach ($filialen as $filiale) {
-                    $name = $filiale["filiale"];
-                    echo <<<END
+    <?php
+    if (empty($records)) {
+        echo "<h2>Keine Einträge vorhanden</h2>";
+    } else {
+    ?>
+        <form class="small-table" id="show-form" action="" method="post">
+            <table id="show-table">
+                <h2>Liste aller Filialen</h2>
+                <thead>
+                    <th>Filiale</th>
+                    <th>Löschen</th>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($records as $record) {
+                        $name = $record["filiale"];
+                        echo <<<END
                     <tr>
                     <td>$name</td>
-                    <td class="action"><button type="submit" value="$name" name="$name">Löschen</td>
+                    <td class="action"><button type="submit" value="$name" name="delete">Löschen</td>
                     </tr>
                     END;
-                }
-                ?>
-            </tbody>
-        </table>
-    </form>
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </form>
+    <?php
+    }
+    ?>
 </div>
 
 <?php

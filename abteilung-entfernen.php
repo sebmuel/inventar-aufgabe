@@ -7,40 +7,46 @@ $auth->loggedIn();
 
 // grab all users from db
 $abteilung = new Abteilung();
-$abteilungsListe = $abteilung->getAll();
+$records = $abteilung->getAll();
 
-if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
+if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["delete"])) {
     $typ = implode($_POST);
     $abteilung->deleteAbteilung(htmlspecialchars($typ));
     header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
     exit();
 }
-
 ?>
-
 <div class="content-inner">
-    <form id="show-form" action="" method="post">
-        <h2>Liste aller Abteilungen: </h2>
-        <table id="show-table">
-            <thead>
-                <th>Abteilung</th>
-                <th>Löschen</th>
-            </thead>
-            <tbody>
-                <?php
-                foreach ($abteilungsListe as $abteilung) {
-                    $typ = $abteilung["abteilung"];
-                    echo <<<END
+    <?php
+    if (empty($records)) {
+        echo "<h2>Keine Einträge vorhanden</h2>";
+    } else {
+    ?>
+        <form class="small-table" id="show-form" action="" method="post">
+            <h2>Liste aller Abteilungen: </h2>
+            <table id="show-table">
+                <thead>
+                    <th>Abteilung</th>
+                    <th>Löschen</th>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($records as $record) {
+                        $typ = $record["abteilung"];
+                        echo <<<END
                     <tr>
                     <td>$typ</td>
-                    <td class="action"><button type="submit" value="$typ" name="$typ">Löschen</td>
+                    <td class="action"><button type="submit" value="$typ" name="delete">Löschen</td>
                     </tr>
                     END;
-                }
-                ?>
-            </tbody>
-        </table>
-    </form>
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </form>
+    <?php
+    }
+    ?>
 </div>
 
 <?php
