@@ -85,11 +85,13 @@ class Auth
                     $_SESSION['message'] = "Account ist gesperrt Bitte kontaktieren sie den Page Admin";
                     return false;
                 }
+                // setLoginAttemps to 0
+                $this->setLoginAttemps($username, 0);
                 // set session Variables
                 $_SESSION["username"] = $username;
                 $_SESSION["logged_in"] = true;
-                // setLoginAttemps to 0
-                $this->setLoginAttemps($username, "0");
+
+
                 return true;
             }
             // user does not exist -> increase login attemps +1 
@@ -283,6 +285,9 @@ class InventarTypen
 }
 
 
+/**
+ * Filiale
+ */
 class Filiale
 {
     public function saveFiliale($filiale)
@@ -292,6 +297,7 @@ class Filiale
             return;
         }
         $matches = $this->getFiliale($filiale);
+
         if ($matches) {
             $_SESSION["message"] = "Typ $filiale existiert bereits";
             return;
@@ -305,7 +311,7 @@ class Filiale
     private function getFiliale($filiale)
     {
 
-        $statement = "SELECT * FROM Filiale WHERE filiale LIKE ?";
+        $statement = "SELECT * FROM Filialen WHERE filiale LIKE ?";
         $prepare = array($filiale);
         $result = ConnectDb::load($statement, $prepare, true);
         return $result;
@@ -324,5 +330,132 @@ class Filiale
         $prepare = array($filiale);
         ConnectDb::store($statement, $prepare);
         $_SESSION["message"] = "Filiale $filiale gelöscht!";
+    }
+}
+
+
+/**
+ * Abteilung
+ */
+class Abteilung
+{
+    public function saveAbteilung($abteilung)
+    {
+        if (strlen($abteilung) <= MINLENGTH) {
+            $_SESSION["message"] = "Eingabe zu Kurz mind. " . MINLENGTH . " Zeichen";
+            return;
+        }
+        $matches = $this->getAbteilung($abteilung);
+
+        if ($matches) {
+            $_SESSION["message"] = "Abteilung $abteilung existiert bereits";
+            return;
+        }
+        $statement = "INSERT INTO Abteilungen (abteilung) VALUES (?)";
+        $prepare = array($abteilung);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Abteilung: $abteilung angelegt !";
+    }
+
+    private function getAbteilung($abteilung)
+    {
+
+        $statement = "SELECT * FROM Abteilungen WHERE abteilung LIKE ?";
+        $prepare = array($abteilung);
+        $result = ConnectDb::load($statement, $prepare, true);
+        return $result;
+    }
+
+    public function getAll()
+    {
+        $statement = "SELECT * FROM Abteilungen";
+        $result = ConnectDb::load($statement);
+        return $result;
+    }
+
+    public function deleteAbteilung($abteilung)
+    {
+        $statement = "DELETE FROM Abteilungen WHERE abteilung LIKE ?";
+        $prepare = array($abteilung);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Abteilung $abteilung gelöscht!";
+    }
+}
+
+
+/**
+ * Inventar
+ */
+class Inventar
+{
+    private InventarTypen $typen;
+    private Abteilung $abteilungen;
+    private Filiale $filialen;
+
+    public float $summeRestwert = 0;
+
+    public function __construct()
+    {
+        $this->typen = new InventarTypen();
+        $this->abteilungen = new Abteilung();
+        $this->filialen = new Filiale();
+    }
+
+    public function getInventarTyp()
+    {
+        return $this->typen->getAll();
+    }
+
+    public function getAbteilung()
+    {
+        return $this->abteilungen->getAll();
+    }
+
+    public function getFiliale()
+    {
+        return $this->filialen->getAll();
+    }
+
+    public function saveInventar(array $values)
+    {
+        $values["preis"] = number_format($values["preis"], 2);
+        $statement = "INSERT INTO Inventar (name, typ, buy_date, buy_price, dauer, abteilung, filiale) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $prepare = array($values["name"], $values["typ"], $values["datum"], $values["preis"], $values["dauer"], $values["abteilung"], $values["filiale"]);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Inventar " .  $values['name']  . " angelegt!";
+    }
+
+    public function getRecords($typ, $abteilung, $filiale)
+    {
+        $statement = "SELECT * FROM Inventar WHERE typ LIKE ? AND abteilung LIKE ? AND filiale LIKE ?";
+        $prepare = array($typ, $abteilung, $filiale);
+        $result = ConnectDb::load($statement, $prepare);
+        return $result;
+    }
+
+    public function deleteRecord($id)
+    {
+        $statement = "DELETE FROM Inventar WHERE i_id = ?";
+        $prepare = array($id);
+        ConnectDb::store($statement, $prepare);
+        $_SESSION["message"] = "Inventar mit der Id: $id gelöscht!";
+    }
+
+    public function residualValue($anschaffungsDatum, $preis, $dauer)
+    {
+        $heute = new DateTime();
+        $anschaffungsDatum = new DateTime($anschaffungsDatum);
+        $jahreVergangen = $heute->diff($anschaffungsDatum);
+        $jahreVergangen = $jahreVergangen->y;
+        $abschreibungsBetrag = $preis / $dauer;
+
+        $rest = $preis;
+        for ($i = 0; $i <= $jahreVergangen; ++$i) {
+            $rest = $rest - $abschreibungsBetrag;
+        }
+        $rest = ($rest < 1) ? 1 : doubleval($rest);
+        $this->summeRestwert += $rest;
+        echo number_format((float)$this->summeRestwert, 2);
+        return number_format((float)$rest, 2);
     }
 }

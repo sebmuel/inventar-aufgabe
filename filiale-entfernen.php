@@ -21,8 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
 <div class="content-inner">
     <form id="show-form" action="" method="post">
         <table id="show-table">
+            <h2>Liste aller Filialen</h2>
             <thead>
-                <th>Inventartyp</th>
+                <th>Filiale</th>
                 <th>Löschen</th>
             </thead>
             <tbody>
@@ -32,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
                     echo <<<END
                     <tr>
                     <td>$name</td>
-                    <td><button type="submit" value="$name" name="$name">Löschen</td>
+                    <td class="action"><button type="submit" value="$name" name="$name">Löschen</td>
                     </tr>
                     END;
                 }

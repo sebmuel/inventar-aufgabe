@@ -133,6 +133,11 @@ nav {
   min-height: 85vh;
 }
 
+.content-inner>h2 {
+  text-align: center;
+  padding: 72px 0;
+}
+
 .dropdown {
   display: none;
   padding-left: 12px;
@@ -148,18 +153,18 @@ nav {
   color: gray;
 }
 
-nav > div {
+nav>div {
   padding: 10px 0;
   border: 1px solid rgba(206, 206, 206, 0.637);
   border-width: 0 0 1px 0;
   cursor: pointer;
 }
 
-nav > div:first-of-type {
+nav>div:first-of-type {
   border-width: 1px 0 1px 0;
 }
 
-div.has-dropdown > span {
+div.has-dropdown>span {
   pointer-events: none;
   font-size: 16px;
   color: #fff;
@@ -175,6 +180,11 @@ div.dropdown.open {
 }
 
 /*** FORMS ***/
+
+.choose-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
 .form-wrapper {
   max-width: 650px;
@@ -225,19 +235,22 @@ div.dropdown.open {
   color: rgba(255, 255, 255, 0.527);
   font-size: 16px;
 }
+
 ::-moz-placeholder {
   /* Firefox 19+ */
-  color: #fff;
+  color: rgba(255, 255, 255, 0.527);
   font-size: 16px;
 }
+
 :-ms-input-placeholder {
   /* IE 10+ */
-  color: #fff;
+  color: rgba(255, 255, 255, 0.527);
   font-size: 16px;
 }
+
 :-moz-placeholder {
   /* Firefox 18- */
-  color: #fff;
+  color: rgba(255, 255, 255, 0.527);
   font-size: 16px;
 }
 
@@ -267,6 +280,7 @@ table {
 
 th {
   background-color: var(--black);
+  padding: 0 10px;
 }
 
 th,
@@ -293,6 +307,31 @@ th,
 td {
   border: 1px solid var(--black);
   color: #fff;
+}
+
+select {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.733);
+  color: #fff;
+  border-width: 0 0 1px 0;
+  padding: 0 10px 5px 10px;
+  margin: 0 0 18px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+select:focus {
+  outline: 0;
+}
+
+select option {
+  background: #212529;
+  font-size: 16px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 /*** KEY FRAMES ***/

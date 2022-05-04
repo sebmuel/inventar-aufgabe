@@ -63,7 +63,7 @@ require_once './assets/functions.php';
                     <div class="has-dropdown">
                         <span>Bearbeite Inventar</span>
                         <div class="dropdown">
-                            <div><a href="/inventar-hinzufuegen.php">Inventar Hinzufügen</a></div>
+                            <div><a href="/inventar-erstellen.php">Inventar Hinzufügen</a></div>
                             <div><a href="/inventar-entfernen.php">Inventar Entfernen</a></div>
                         </div>
                     </div>

@@ -20,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
 
 <div class="content-inner">
     <form id="show-form" action="" method="post">
+        <h2>Liste aller Inventartypen: </h2>
         <table id="show-table">
             <thead>
                 <th>Inventartyp</th>
@@ -32,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
                     echo <<<END
                     <tr>
                     <td>$typ</td>
-                    <td><button type="submit" value="$typ" name="$typ">Löschen</td>
+                    <td class="action"><button type="submit" value="$typ" name="$typ">Löschen</td>
                     </tr>
                     END;
                 }

@@ -1,17 +1,15 @@
 <?php
-$siteTitle = 'Abteilung Erstellen';
+$siteTitle = 'Erstelle Abteilung';
 include_once './layouts/header.php';
 
 //check if user is logged in 
 $auth->loggedIn();
+// create Inventartyp Object
+$abteilung = new Abteilung();
 
-// grab all users from db
-$inventartyp = new InventarTypen();
-$inventartypenList = $inventartyp->getAll();
-
-if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
-    $typ = implode($_POST);
-    $inventartyp->deleteType(htmlspecialchars($typ));
+if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["abteilung"])) {
+    $typ = htmlspecialchars($_POST["abteilung"]);
+    $abteilung->saveAbteilung($typ);
     header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
     exit();
 }
@@ -19,27 +17,16 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
 ?>
 
 <div class="content-inner">
-    <form id="show-form" action="" method="post">
-        <table id="show-table">
-            <thead>
-                <th>Inventartyp</th>
-                <th>Löschen</th>
-            </thead>
-            <tbody>
-                <?php
-                foreach ($inventartypenList as $inventartypItem) {
-                    $typ = $inventartypItem["typ_name"];
-                    echo <<<END
-                    <tr>
-                    <td>$typ</td>
-                    <td><button type="submit" value="$typ" name="$typ">Löschen</td>
-                    </tr>
-                    END;
-                }
-                ?>
-            </tbody>
-        </table>
-    </form>
+    <div class="form-wrapper">
+        <h2>Abteilung Anlegen</h2>
+        <hr>
+        <form action="" method="post">
+            <div class="mb-3">
+                <input type="text" name="abteilung" placeholder="Abteilung Bezeichnung" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Anlegen</button>
+        </form>
+    </div>
 </div>
 
 <?php

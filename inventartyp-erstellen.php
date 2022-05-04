@@ -7,8 +7,8 @@ $auth->loggedIn();
 // create Inventartyp Object
 $inventartypen = new InventarTypen();
 
-if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["filiale"])) {
-    $typ = htmlspecialchars($_POST["filiale"]);
+if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["inventartyp"])) {
+    $typ = htmlspecialchars($_POST["inventartyp"]);
     $inventartypen->saveInventarTyp($typ);
     header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
     exit();
@@ -19,10 +19,11 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["filiale"])) {
 
 <div class="content-inner">
     <div class="form-wrapper">
-        <h2>Filiale Anlegen</h2>
+        <h2>Inventartyp Anlegen</h2>
+        <hr>
         <form action="" method="post">
             <div class="mb-3">
-                <input type="text" name="filiale" placeholder="Filiale" required>
+                <input type="text" name="inventartyp" placeholder="Inventartyp Bezeichnung" required>
             </div>
             <button type="submit" class="btn btn-primary">Anlegen</button>
         </form>
