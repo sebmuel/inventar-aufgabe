@@ -38,37 +38,37 @@ require_once './assets/functions.php';
         <div id="sidebar">
             <div class="sidebar-wrapper">
                 <nav>
-                    <div><a href="../logout.php">Logout</a></div>
+                    <div id="logout"><a href="../logout.php">Logout</a></div>
                     <div class="has-dropdown">
-                        <span>Bearbeite Inventartypen</span>
+                        <span>Inventartypen</span>
                         <div class="dropdown">
                             <div><a href="/inventartyp-erstellen.php">Inventartype Erstellen</a></div>
                             <div><a href="/inventartyp-entfernen.php">Inventartype Entfernen</a></div>
                         </div>
                     </div>
                     <div class="has-dropdown">
-                        <span>Bearbeite Filialen</span>
+                        <span>Filialen</span>
                         <div class="dropdown">
                             <div><a href="/filiale-erstellen.php">Filiale Hinzufügen</a></div>
                             <div><a href="/filiale-entfernen.php">Filiale Löschen</a></div>
                         </div>
                     </div>
                     <div class="has-dropdown">
-                        <span>Bearbeite Abteilungen</span>
+                        <span>Abteilungen</span>
                         <div class="dropdown">
                             <div><a href="/abteilung-erstellen.php">Abteilung Hinzufügen</a></div>
                             <div><a href="/abteilung-entfernen.php">Abteilung Löschen</a></div>
                         </div>
                     </div>
                     <div class="has-dropdown">
-                        <span>Bearbeite Inventar</span>
+                        <span>Inventar</span>
                         <div class="dropdown">
                             <div><a href="/inventar-erstellen.php">Inventar Hinzufügen</a></div>
                             <div><a href="/inventar-entfernen.php">Inventar Entfernen</a></div>
                         </div>
                     </div>
                     <div class="has-dropdown">
-                        <span>Anzeigen Inventarliste</span>
+                        <span>Inventarliste</span>
                         <div class="dropdown">
                             <div><a href="/inventar-anzeigen.php">Inventar Anzeigen</a></div>
                         </div>

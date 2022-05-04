@@ -418,7 +418,7 @@ class Inventar
 
     public function saveInventar(array $values)
     {
-        $values["preis"] = number_format($values["preis"], 2);
+        $values["preis"] = number_format((float)$values["preis"], 2);
         $statement = "INSERT INTO Inventar (name, typ, buy_date, buy_price, dauer, abteilung, filiale) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $prepare = array($values["name"], $values["typ"], $values["datum"], $values["preis"], $values["dauer"], $values["abteilung"], $values["filiale"]);
         ConnectDb::store($statement, $prepare);

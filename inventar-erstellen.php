@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
         <h2>Inventar Anlegen</h2>
         <hr>
         <form action="" method="post">
-            <input type="text" name="name" placeholder="Inventar Name" required>
+            <input type="text" name="name" placeholder="Gegenstands Name" required>
             <select name="typ" required>
                 <option value="" selected disabled>Wähle Typ</option>
                 <?php

@@ -19,28 +19,37 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and count($_POST) > 0) {
 ?>
 
 <div class="content-inner">
-    <form id="show-form" action="" method="post">
-        <h2>Liste aller Inventartypen: </h2>
-        <table id="show-table">
-            <thead>
-                <th>Inventartyp</th>
-                <th>Löschen</th>
-            </thead>
-            <tbody>
-                <?php
-                foreach ($inventartypenList as $inventartypItem) {
-                    $typ = $inventartypItem["typ_name"];
-                    echo <<<END
+    <?php
+    // when no records where found print message instead of empty table
+    if (empty($inventartypenList)) {
+        echo "<h2>Keine Einträge vorhanden</h2>";
+    } else {
+    ?>
+        <form id="show-form" action="" method="post">
+            <h2>Liste aller Inventartypen: </h2>
+            <table class="small-table" id="show-table">
+                <thead>
+                    <th>Inventartyp</th>
+                    <th>Löschen</th>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($inventartypenList as $inventartypItem) {
+                        $typ = $inventartypItem["typ_name"];
+                        echo <<<END
                     <tr>
                     <td>$typ</td>
                     <td class="action"><button type="submit" value="$typ" name="$typ">Löschen</td>
                     </tr>
                     END;
-                }
-                ?>
-            </tbody>
-        </table>
-    </form>
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </form>
+    <?php
+    }
+    ?>
 </div>
 
 <?php

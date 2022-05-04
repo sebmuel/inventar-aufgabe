@@ -23,6 +23,7 @@ h5,
 h6 {
   margin: 0;
   padding: 0;
+  color: #fff;
 }
 
 * {
@@ -62,6 +63,11 @@ button:hover {
   height: 15vh;
 }
 
+.small-table {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 .jumbotron h2 {
   color: #fff;
   font-weight: 300;
@@ -86,8 +92,8 @@ button:hover {
 }
 
 #sidebar {
-  min-width: 350px;
-  max-width: 350px;
+  min-width: 250px;
+  max-width: 250px;
   min-height: calc(100vh - 210px);
   padding: 8px;
   list-style: none;
@@ -95,8 +101,8 @@ button:hover {
 
 .sidebar-wrapper {
   position: fixed;
-  width: 300px;
-  left: 8px;
+  width: 200px;
+  left: 20px;
 }
 
 /*** MESSAGE BOX ***/
@@ -133,14 +139,14 @@ nav {
   min-height: 85vh;
 }
 
-.content-inner>h2 {
+.content-inner > h2 {
   text-align: center;
   padding: 72px 0;
 }
 
 .dropdown {
   display: none;
-  padding-left: 12px;
+  padding-top: 16px;
 }
 
 .dropdown a {
@@ -149,29 +155,38 @@ nav {
   transition: color 200ms ease-in-out;
 }
 
+#logout a {
+  color: #fff;
+}
+
 .dropdown a:hover {
   color: gray;
 }
 
-nav>div {
-  padding: 10px 0;
+nav > div {
+  padding: 16px 0;
   border: 1px solid rgba(206, 206, 206, 0.637);
   border-width: 0 0 1px 0;
   cursor: pointer;
 }
 
-nav>div:first-of-type {
+nav > div:first-of-type {
   border-width: 1px 0 1px 0;
 }
 
-div.has-dropdown>span {
+div.has-dropdown > span {
   pointer-events: none;
-  font-size: 16px;
+  font-size: 16 px;
   color: #fff;
 }
 
 div.dropdown.open {
   display: block;
+  animation: fadeIn 500ms linear;
+}
+
+.dropdown > div {
+  padding: 10px 0;
 }
 
 .logout-form {
@@ -212,7 +227,7 @@ div.dropdown.open {
   background-color: #fff;
   border: none;
   max-width: 300px;
-  margin: 16px auto 54px auto;
+  margin: 0 auto 54px auto;
 }
 
 .form-wrapper input {
@@ -232,25 +247,25 @@ div.dropdown.open {
 
 ::-webkit-input-placeholder {
   /* Chrome/Opera/Safari */
-  color: rgba(255, 255, 255, 0.527);
+  color: #fff;
   font-size: 16px;
 }
 
 ::-moz-placeholder {
   /* Firefox 19+ */
-  color: rgba(255, 255, 255, 0.527);
+  color: #fff;
   font-size: 16px;
 }
 
 :-ms-input-placeholder {
   /* IE 10+ */
-  color: rgba(255, 255, 255, 0.527);
+  color: #fff;
   font-size: 16px;
 }
 
 :-moz-placeholder {
   /* Firefox 18- */
-  color: rgba(255, 255, 255, 0.527);
+  color: #fff;
   font-size: 16px;
 }
 
@@ -312,10 +327,10 @@ td {
 select {
   width: 100%;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.733);
+  border: 1px solid rgba(255, 255, 255, 0.479);
   color: #fff;
   border-width: 0 0 1px 0;
-  padding: 0 10px 5px 10px;
+  padding: 0 10px 5px 6px;
   margin: 0 0 18px 0;
   font-size: 16px;
   text-align: left;
@@ -347,5 +362,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   to {
     opacity: 1;
     right: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

@@ -23,9 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST' and isset($_POST["filiale"])) {
         <hr>
         <form action="" method="post">
             <div class="mb-3">
-                <input type="text" name="filiale" placeholder="Filiale Bezeichnung" required>
+                <input type="text" name="filiale" placeholder="Bezeichnung der Filiale" required>
             </div>
-            <button type="submit" class="btn btn-primary">Anlegen</button>
+            <button type=" submit" class="btn btn-primary">Anlegen</button>
         </form>
     </div>
 </div>
