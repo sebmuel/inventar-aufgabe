@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Erstellungszeit: 05. Mai 2022 um 13:44
--- Server-Version: 8.0.27-0ubuntu0.20.04.1
+-- Erstellungszeit: 05. Mai 2022 um 17:04
+-- Server-Version: 8.0.28-0ubuntu0.20.04.3
 -- PHP-Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -53,7 +53,7 @@ CREATE TABLE `Inventar` (
   `name` varchar(255) DEFAULT NULL,
   `typ` varchar(255) DEFAULT NULL,
   `buy_date` date DEFAULT NULL,
-  `buy_price` double DEFAULT NULL,
+  `buy_price` float(10,2) DEFAULT NULL,
   `dauer` int DEFAULT NULL,
   `filiale` varchar(255) DEFAULT NULL,
   `abteilung` varchar(255) DEFAULT NULL
@@ -134,7 +134,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT für Tabelle `Inventar`
 --
 ALTER TABLE `Inventar`
-  MODIFY `i_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `i_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `Users`

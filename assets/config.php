@@ -15,7 +15,7 @@ define('LOGO', "/assets/media/logo-platzhalter.png");
 define('HOSTNAME', "localhost");
 define('DATABASENAME', "inventarisierung");
 define('DATABASEUSER', "seb");
-define('DATABASEPASSWORD', "Hallodu123");
+define('DATABASEPASSWORD', "password");
 
 // determine entry point when logged in
 define('ENTRY', '/inventartyp-erstellen.php');

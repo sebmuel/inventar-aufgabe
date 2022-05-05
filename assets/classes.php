@@ -3,7 +3,7 @@
 require_once 'config.php';
 
 /**
- *  Conncetion Class   
+ *  Conncetion Class
  */
 
 class ConnectDb
@@ -16,19 +16,23 @@ class ConnectDb
 
     /**
      * getDbObject
-     * create PDO Object and hand it to the load and save methods 
-     * 
+     * create PDO Object and hand it to the load and save methods
+     *
      * @return PDO
      */
     public static function getDbObject()
     {
-        return new PDO("mysql:dbname=" . ConnectDb::$name . ";host=" . ConnectDb::$host, ConnectDb::$user, ConnectDb::$pass);
+        return new PDO(
+            "mysql:dbname=" . ConnectDb::$name . ";host=" . ConnectDb::$host,
+            ConnectDb::$user,
+            ConnectDb::$pass
+        );
     }
 
     /**
      * store
-     * handle the update requests to he database 
-     * 
+     * handle the update requests to he database
+     *
      * @param  string $statement A valid SQL STATEMENT
      * @param  array $prepare  An array with parameters for the PDO->prepare method
      * @return void
@@ -42,7 +46,7 @@ class ConnectDb
             $sql = $statement;
             $query = $pdo->prepare($sql);
             $query->execute($prepare);
-        } catch (PDOException  $e) {
+        } catch (PDOException $e) {
             $_SESSION["message"] = $e->getMessage();
         } finally {
             $pdo = null;
@@ -85,11 +89,10 @@ class ConnectDb
 class Auth
 {
 
-
     /**
      * login
      * Method to log the user in
-     * 
+     *
      * @param  string $username
      * @param  string $password
      * @return bool
@@ -100,23 +103,21 @@ class Auth
         $result = $this->getUser($username);
         // check if user exists
         if (!empty($result)) {
+            if ($result["login_attepms"] >= 3) {
+                $_SESSION['message'] = "Account ist gesperrt Bitte kontaktieren sie den Page Admin";
+                return false;
+            }
             // user exists -> validate password
             if (password_verify($password, $result["passwort"])) {
-                // check if account is locked
-                if ($result["login_attepms"] >= 3) {
-                    $_SESSION['message'] = "Account ist gesperrt Bitte kontaktieren sie den Page Admin";
-                    return false;
-                }
                 // setLoginAttemps to 0
                 $this->setLoginAttemps($username, 0);
                 // set session Variables
                 $_SESSION["username"] = $username;
                 $_SESSION["logged_in"] = true;
 
-
                 return true;
             }
-            // user does not exist -> increase login attemps +1 
+            // name was right but password was wrong so -> increase login attemps
             $this->setLoginAttemps($username, $result["login_attepms"] + 1);
             $_SESSION["message"] = "Kombination aus Passwort und Username ist falsch!";
             return false;
@@ -128,7 +129,7 @@ class Auth
     /**
      * loggedIn
      * Checks if the user is logged and taking action if not
-     * 
+     *
      */
     public function loggedIn()
     {
@@ -149,7 +150,8 @@ class Auth
     public function setLoginAttemps(string $username, string $attemps)
     {
         if ($username === $_SESSION["username"]) {
-            $_SESSION["message"] = "Sie können den Account nicht Sperren wenn sie eingeloggt sind";
+            $_SESSION["message"] = "Sie können den Account nicht 
+            Sperren/Entsperren wenn sie eingeloggt sind";
             return;
         }
         $statement = "UPDATE Users SET login_attepms = $attemps WHERE username Like ?";
@@ -170,7 +172,7 @@ class Auth
 
         // check if username already exists
         if (!empty($nameAvailable)) {
-            $_SESSION["message"] =  "$username ist schon belegt! Wähle einen anderen Namen";
+            $_SESSION["message"] = "$username ist schon belegt! Wähle einen anderen Namen";
             return;
         }
 
@@ -193,7 +195,7 @@ class Auth
     /**
      * listUsers
      * retrive all users
-     * 
+     *
      * @return array
      */
     public function listUsers()
@@ -203,11 +205,10 @@ class Auth
         return $result;
     }
 
-
     /**
      * getUser
      * get one specific user
-     * 
+     *
      * @param  string $username
      * @return array
      */
@@ -223,7 +224,7 @@ class Auth
     /**
      * deleteUser
      * delete selected user
-     * 
+     *
      * @param  string $username
      * @return void
      */
@@ -231,7 +232,8 @@ class Auth
     {
         // check if the user is trying to delete the account he is logged in with
         if ($username === $_SESSION["username"]) {
-            $_SESSION["message"] = "Sie können den Account nicht löschen wenn sie eingeloggt sind";
+            $_SESSION["message"] = "Sie können den Account nicht 
+            löschen wenn sie eingeloggt sind";
             return;
         }
         $statement = "DELETE FROM Users WHERE username LIKE ?";
@@ -243,7 +245,7 @@ class Auth
     /**
      * saveUser
      * save a single user
-     * 
+     *
      * @param  string $username
      * @param  string $hash
      * @return void
@@ -256,7 +258,6 @@ class Auth
         $_SESSION["message"] = "Benutzer $username angelegt!";
     }
 }
-
 
 /**
  * InventarTypen
@@ -310,7 +311,6 @@ class InventarTypen
     }
 }
 
-
 /**
  * Filiale
  */
@@ -358,7 +358,6 @@ class Filiale
         $_SESSION["message"] = "Filiale $filiale gelöscht!";
     }
 }
-
 
 /**
  * Abteilung
@@ -419,7 +418,6 @@ class Abteilung
     }
 }
 
-
 /**
  * Inventar
  */
@@ -429,7 +427,7 @@ class Inventar
     private Abteilung $abteilungen;
     private Filiale $filialen;
 
-    public array $entries  = [];
+    public array $entries = [];
     public float $summeRestwerte = 0;
 
     public function __construct()
@@ -471,17 +469,27 @@ class Inventar
 
     public function saveInventar(array $values)
     {
-        $values["preis"] = number_format((float)$values["preis"], 2);
-        $statement = "INSERT INTO Inventar (name, typ, buy_date, buy_price, dauer, abteilung, filiale) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $prepare = array($values["name"], $values["typ"], $values["datum"], $values["preis"], $values["dauer"], $values["abteilung"], $values["filiale"]);
+        $values["preis"] = number_format((float) $values["preis"], 2);
+        $statement = "INSERT INTO Inventar (name, typ, buy_date, buy_price, dauer, abteilung, filiale) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // transform formated nubmer to float
+        $values["preis"] = (float) filter_var(
+            $values["preis"],
+            FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION
+        );
+        $prepare = array(
+            $values["name"], $values["typ"], $values["datum"],
+            $values["preis"], $values["dauer"], $values["abteilung"], $values["filiale"]
+        );
         ConnectDb::store($statement, $prepare);
-        $_SESSION["message"] = "Inventar " .  $values['name']  . " angelegt!";
+        $_SESSION["message"] = "Inventar " . $values['name'] . " angelegt!";
     }
 
     /**
      * getRecords
-     * Returns a list of Records based on the Selected Options 
-     * 
+     * Returns a list of Records based on the Selected Options
+     *
      * @param  string $typ
      * @param  string $abteilung
      * @param  string $filiale
@@ -503,6 +511,11 @@ class Inventar
         $_SESSION["message"] = "Inventar mit der Id: $id gelöscht!";
     }
 
+    /**
+     * entries
+     * builds InventarEntry objects
+     * @return array
+     */
     public function entries()
     {
         $entries = $this->getRecords();
@@ -516,11 +529,16 @@ class Inventar
             $filiale = $entry["filiale"];
             $abteilung = $entry["abteilung"];
             $entry = new InventarEntry($id, $name, $preis, $datum, $dauer, $typ, $filiale, $abteilung);
-            array_push($this->entries,  $entry);
+            array_push($this->entries, $entry);
         }
         return $entries;
     }
 
+    /**
+     * calcTotal
+     * calculate the total "Restwert"
+     * @return float
+     */
     public function calcTotal()
     {
         if (!empty($this->entries)) {
@@ -531,6 +549,14 @@ class Inventar
         }
     }
 
+    /**
+     * filter
+     * filters the array with records based on the input from user 
+     * 
+     * @param  array $filters
+     * @param  array $records
+     * @return array
+     */
     public function filter(array $filters, array $records)
     {
         $min = floatval(htmlspecialchars($filters["min"]));
@@ -567,7 +593,6 @@ class Inventar
     }
 }
 
-
 class InventarEntry
 {
     public $id;
@@ -595,8 +620,8 @@ class InventarEntry
 
     /**
      * residualValue
-     * method to calculate the "Aktuelle Restwert" 
-     * 
+     * method to calculate the "Aktuelle Restwert"
+     *
      * @param  mixed $anschaffungsDatum
      * @param  mixed $preis
      * @param  mixed $dauer
@@ -611,7 +636,6 @@ class InventarEntry
         $jahreVergangen = $jahreVergangen->y;
         $abschreibungsBetrag = $preis / $dauer;
         $rest = $preis;
-        echo $preis . "<br>";
         for ($i = 0; $i < $jahreVergangen; ++$i) {
             $rest = $rest - $abschreibungsBetrag;
         }

@@ -61,8 +61,8 @@ $summeRestwerte = $inventar->calcTotal();
                 }
                 ?>
             </select>
-            <input type="number" name="min" steps="0.01" min="0" placeholder="Restwert größer als" value="0">
-            <input type="number" name="max" steps="0.01" placeholder="Restwert kleiner als" value="<?php echo floatval($summeRestwerte); ?>">
+            <input type="number" name="min" min="0" placeholder="Restwert größer als" value="0">
+            <input type="number" name="max" placeholder="Restwert kleiner als" value="<?php echo floor(floatval($summeRestwerte)); ?>">
             <button type="submit" class="btn btn-primary">Suchen</button>
         </form>
         <table id="show-table">
