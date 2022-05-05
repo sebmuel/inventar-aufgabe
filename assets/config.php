@@ -7,12 +7,15 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-// config
+// logo path
 define('LOGO', "/assets/media/logo-platzhalter.png");
+
+// db credentials
+
 define('HOSTNAME', "localhost");
 define('DATABASENAME', "inventarisierung");
 define('DATABASEUSER', "seb");
-define('DATABASEPASSWORD', "password");
+define('DATABASEPASSWORD', "Hallodu123");
 
 // determine entry point when logged in
 define('ENTRY', '/inventartyp-erstellen.php');

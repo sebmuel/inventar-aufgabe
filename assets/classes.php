@@ -42,7 +42,7 @@ class ConnectDb
             $sql = $statement;
             $query = $pdo->prepare($sql);
             $query->execute($prepare);
-        } catch (PDOException $e) {
+        } catch (PDOException  $e) {
             $_SESSION["message"] = $e->getMessage();
         } finally {
             $pdo = null;
@@ -509,14 +509,14 @@ class Inventar
         $jahreVergangen = $heute->diff($anschaffungsDatum);
         $jahreVergangen = $jahreVergangen->y;
         $abschreibungsBetrag = $preis / $dauer;
-
         $rest = $preis;
-        for ($i = 0; $i <= $jahreVergangen; ++$i) {
+
+        for ($i = 0; $i < $jahreVergangen; ++$i) {
             $rest = $rest - $abschreibungsBetrag;
         }
-        $rest = ($rest < 1) ? 1 : doubleval($rest);
+
         $this->summeRestwert += $rest;
-        echo number_format((float)$this->summeRestwert, 2);
+        $rest = ($rest < 1) ? 1 : doubleval($rest);;
         return number_format((float)$rest, 2);
     }
 }

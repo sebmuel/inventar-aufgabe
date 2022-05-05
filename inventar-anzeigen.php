@@ -12,12 +12,41 @@ $inventar = new Inventar();
 $typen = $inventar->getInventarTyp();
 $abteilungen = $inventar->getAbteilung();
 $filialen = $inventar->getFiliale();
-
-if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
+if ($_SERVER["REQUEST_METHOD"] === "POST" and !empty($_POST)) {
+    if (isset($_POST["typ"]) and isset($_POST["abteilung"]) and isset($_POST["filiale"])) {
+        $typ = htmlspecialchars($_POST["typ"]);
+        $abteilung = htmlspecialchars($_POST["abteilung"]);
+        $filiale = htmlspecialchars($_POST["filiale"]);
+        $records = $inventar->getRecords($typ, $abteilung, $filiale);
+        // otherwise we can assume the post-request was made to delete a record
+    } elseif (isset($_POST["delete"])) {
+        $inventar->deleteRecord(htmlspecialchars($_POST["delete"]));
+        header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
+        exit();
+    }
 } else {
+    // with no parameters given show all
     $records = $inventar->getRecords("%%", "%%", "%%");
 }
+// set "restwert" key to array
+$validRecords = array();
 
+for ($i = 0; $i < count($records); ++$i) {
+    $restwert = $inventar->residualValue($records[$i]["buy_date"], $records[$i]["buy_price"], $records[$i]["dauer"]);
+    $min = htmlspecialchars($_POST["min"]);
+    $max = htmlspecialchars($_POST["max"]);
+    $min = number_format((float)$min, 2);
+    echo gettype($min);
+    echo $restwert;
+    if ($restwert > $min or $restwert < $max) {
+        $records[$i]["restwert"] = $restwert;
+        array_push($validRecords, $records[$i]);
+    }
+}
+
+echo "<pre>";
+var_dump($validRecords);
+echo "</pre>";
 ?>
 
 <div class="content-inner">
@@ -54,8 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
                 ?>
             </select>
             <input type="number" name="min" steps="0.01" min="0" placeholder="Restwert größer als" value="0">
-            <input type="number" name="max" steps="0.01" placeholder="Restwert kleiner als" value="%%">
+            <input type="number" name="max" steps="0.01" placeholder="Restwert kleiner als" value="99999999999999">
             <button type="submit" class="btn btn-primary">Suchen</button>
+        </form>
+        <form action="" method="post" class="form-wrapper spacer">
+            <input type="text" name="search" placeholder="Geben sie einen Begriff ein zum suchen: ">
+            <button type="submit">Suchen</button>
         </form>
         <table id="show-table">
             <form method="post" action="">
@@ -81,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
                         $datum = $record["buy_date"];
                         $preis = $record["buy_price"];
                         $dauer = $record["dauer"];
-                        $restwert = $inventar->residualValue($datum, $preis, $dauer);
+                        $restwert = $record["restwert"];
                         $filiale = $record["filiale"];
                         $abteilung = $record["abteilung"];
 
@@ -101,10 +134,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
                     }
                     ?>
                 </tbody>
-                <tfoot>
-                    <tr><?php echo $inventar->summeRestwert; ?></tr>
-                </tfoot>
+
         </table>
+
+        <div class="table-information">
+            <span>
+                Summe Restwerte:
+            </span>
+            <span>
+                <?php
+                echo number_format((float)$inventar->summeRestwert, 2) . "€";
+                ?>
+            </span>
+        </div>
         </form>
 
     <?php

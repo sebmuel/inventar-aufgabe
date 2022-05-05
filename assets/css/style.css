@@ -139,7 +139,7 @@ nav {
   min-height: 85vh;
 }
 
-.content-inner > h2 {
+.content-inner>h2 {
   text-align: center;
   padding: 72px 0;
 }
@@ -163,18 +163,18 @@ nav {
   color: gray;
 }
 
-nav > div {
+nav>div {
   padding: 16px 0;
   border: 1px solid rgba(206, 206, 206, 0.637);
   border-width: 0 0 1px 0;
   cursor: pointer;
 }
 
-nav > div:first-of-type {
+nav>div:first-of-type {
   border-width: 1px 0 1px 0;
 }
 
-div.has-dropdown > span {
+div.has-dropdown>span {
   pointer-events: none;
   font-size: 16 px;
   color: #fff;
@@ -185,7 +185,7 @@ div.dropdown.open {
   animation: fadeIn 500ms linear;
 }
 
-.dropdown > div {
+.dropdown>div {
   padding: 10px 0;
 }
 
@@ -204,6 +204,10 @@ div.dropdown.open {
 .form-wrapper {
   max-width: 650px;
   margin: 0 auto;
+}
+
+.spacer {
+  padding: 36px 0;
 }
 
 .form-wrapper h2 {
@@ -370,6 +374,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

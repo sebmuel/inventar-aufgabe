@@ -13,7 +13,7 @@ $typen = $inventar->getInventarTyp();
 $abteilungen = $inventar->getAbteilung();
 $filialen = $inventar->getFiliale();
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" and count($_POST) > 0) {
+if ($_SERVER["REQUEST_METHOD"] === "POST" and !empty($_POST)) {
     // if those POST variables are set we render table
     if (isset($_POST["typ"]) and isset($_POST["abteilung"]) and isset($_POST["filiale"])) {
         $typ = htmlspecialchars($_POST["typ"]);
