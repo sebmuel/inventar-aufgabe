@@ -86,6 +86,11 @@ button:hover {
   background: #212529;
 }
 
+.back {
+  color: #fff;
+  text-transform: none;
+}
+
 #content {
   display: flex;
   align-items: stretch;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Erstellungszeit: 03. Mai 2022 um 15:22
+-- Erstellungszeit: 05. Mai 2022 um 13:44
 -- Server-Version: 8.0.27-0ubuntu0.20.04.1
 -- PHP-Version: 7.4.3
 
@@ -29,8 +29,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `Abteilungen` (
-  `a_id` int NOT NULL,
-  `abteilung` varchar(255) DEFAULT NULL
+  `abteilung` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -40,18 +39,8 @@ CREATE TABLE `Abteilungen` (
 --
 
 CREATE TABLE `Filialen` (
-  `f_id` int NOT NULL,
-  `filiale` varchar(255) DEFAULT NULL
+  `filiale` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Daten für Tabelle `Filialen`
---
-
-INSERT INTO `Filialen` (`f_id`, `filiale`) VALUES
-(1, 'Saarbrücken'),
-(4, 'Dortmund'),
-(5, 'Gladbach');
 
 -- --------------------------------------------------------
 
@@ -60,14 +49,14 @@ INSERT INTO `Filialen` (`f_id`, `filiale`) VALUES
 --
 
 CREATE TABLE `Inventar` (
-  `inv_id` int NOT NULL,
+  `i_id` int NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `typ` int DEFAULT NULL,
-  `datum` date DEFAULT NULL,
-  `anschaffungspreis` double DEFAULT NULL,
-  `nutzungsdauer` int DEFAULT NULL,
-  `filiale` int DEFAULT NULL,
-  `abteilung` int DEFAULT NULL
+  `typ` varchar(255) DEFAULT NULL,
+  `buy_date` date DEFAULT NULL,
+  `buy_price` double DEFAULT NULL,
+  `dauer` int DEFAULT NULL,
+  `filiale` varchar(255) DEFAULT NULL,
+  `abteilung` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -77,18 +66,8 @@ CREATE TABLE `Inventar` (
 --
 
 CREATE TABLE `Inventartypen` (
-  `it_id` int NOT NULL,
-  `typ_name` varchar(255) DEFAULT NULL
+  `typ_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Daten für Tabelle `Inventartypen`
---
-
-INSERT INTO `Inventartypen` (`it_id`, `typ_name`) VALUES
-(6, 'Computer'),
-(7, 'Tisch'),
-(9, 'Stuhl');
 
 -- --------------------------------------------------------
 
@@ -108,9 +87,7 @@ CREATE TABLE `Users` (
 --
 
 INSERT INTO `Users` (`u_id`, `username`, `passwort`, `login_attepms`) VALUES
-(1, 'admin', '$2y$10$Or0XzXWJtOTgTO19TTF1NOd4TTFx5W4p8mMmvW3/t6K67jiIj35cu', 0),
-(12, 'Sebastian', '$2y$10$KW/ojftQLPz6DQKECoWRpeDaq6Pz1FYq9HmwzOd2u8XSlQzF8wiLm', 0),
-(13, 'Peter', '$2y$10$r8MfUDTbhfJdpCQ/RMrtXeXYI1HubAQdpGzJhJoxi.Yu7oMJgdAP6', 0);
+(1, 'admin', '$2y$10$Or0XzXWJtOTgTO19TTF1NOd4TTFx5W4p8mMmvW3/t6K67jiIj35cu', 0);
 
 --
 -- Indizes der exportierten Tabellen
@@ -120,28 +97,28 @@ INSERT INTO `Users` (`u_id`, `username`, `passwort`, `login_attepms`) VALUES
 -- Indizes für die Tabelle `Abteilungen`
 --
 ALTER TABLE `Abteilungen`
-  ADD PRIMARY KEY (`a_id`);
+  ADD PRIMARY KEY (`abteilung`);
 
 --
 -- Indizes für die Tabelle `Filialen`
 --
 ALTER TABLE `Filialen`
-  ADD PRIMARY KEY (`f_id`);
+  ADD PRIMARY KEY (`filiale`);
 
 --
 -- Indizes für die Tabelle `Inventar`
 --
 ALTER TABLE `Inventar`
-  ADD PRIMARY KEY (`inv_id`),
+  ADD PRIMARY KEY (`i_id`),
   ADD KEY `typ` (`typ`),
-  ADD KEY `filiale` (`filiale`),
-  ADD KEY `abteilung` (`abteilung`);
+  ADD KEY `abteilung` (`abteilung`),
+  ADD KEY `filiale` (`filiale`);
 
 --
 -- Indizes für die Tabelle `Inventartypen`
 --
 ALTER TABLE `Inventartypen`
-  ADD PRIMARY KEY (`it_id`);
+  ADD PRIMARY KEY (`typ_name`);
 
 --
 -- Indizes für die Tabelle `Users`
@@ -154,28 +131,10 @@ ALTER TABLE `Users`
 --
 
 --
--- AUTO_INCREMENT für Tabelle `Abteilungen`
---
-ALTER TABLE `Abteilungen`
-  MODIFY `a_id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `Filialen`
---
-ALTER TABLE `Filialen`
-  MODIFY `f_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- AUTO_INCREMENT für Tabelle `Inventar`
 --
 ALTER TABLE `Inventar`
-  MODIFY `inv_id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `Inventartypen`
---
-ALTER TABLE `Inventartypen`
-  MODIFY `it_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `i_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT für Tabelle `Users`
@@ -191,9 +150,9 @@ ALTER TABLE `Users`
 -- Constraints der Tabelle `Inventar`
 --
 ALTER TABLE `Inventar`
-  ADD CONSTRAINT `Inventar_ibfk_1` FOREIGN KEY (`typ`) REFERENCES `Inventartypen` (`it_id`),
-  ADD CONSTRAINT `Inventar_ibfk_2` FOREIGN KEY (`filiale`) REFERENCES `Filialen` (`f_id`),
-  ADD CONSTRAINT `Inventar_ibfk_3` FOREIGN KEY (`abteilung`) REFERENCES `Abteilungen` (`a_id`);
+  ADD CONSTRAINT `Inventar_ibfk_1` FOREIGN KEY (`typ`) REFERENCES `Inventartypen` (`typ_name`),
+  ADD CONSTRAINT `Inventar_ibfk_2` FOREIGN KEY (`abteilung`) REFERENCES `Abteilungen` (`abteilung`),
+  ADD CONSTRAINT `Inventar_ibfk_3` FOREIGN KEY (`filiale`) REFERENCES `Filialen` (`filiale`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -12,47 +12,26 @@ $inventar = new Inventar();
 $typen = $inventar->getInventarTyp();
 $abteilungen = $inventar->getAbteilung();
 $filialen = $inventar->getFiliale();
-if ($_SERVER["REQUEST_METHOD"] === "POST" and !empty($_POST)) {
-    if (isset($_POST["typ"]) and isset($_POST["abteilung"]) and isset($_POST["filiale"])) {
-        $typ = htmlspecialchars($_POST["typ"]);
-        $abteilung = htmlspecialchars($_POST["abteilung"]);
-        $filiale = htmlspecialchars($_POST["filiale"]);
-        $records = $inventar->getRecords($typ, $abteilung, $filiale);
-        // otherwise we can assume the post-request was made to delete a record
-    } elseif (isset($_POST["delete"])) {
-        $inventar->deleteRecord(htmlspecialchars($_POST["delete"]));
-        header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
-        exit();
-    }
+
+if ($_SERVER["REQUEST_METHOD"] == 'POST') {
+    $inventar->entries();
+    $records = $inventar->entries;
+    $filteredRecords = $inventar->filter($_POST, $records);
+    $records = $filteredRecords;
 } else {
-    // with no parameters given show all
-    $records = $inventar->getRecords("%%", "%%", "%%");
+    $inventar->entries();
+    $records = $inventar->entries;
 }
-// set "restwert" key to array
-$validRecords = array();
-
-for ($i = 0; $i < count($records); ++$i) {
-    $restwert = $inventar->residualValue($records[$i]["buy_date"], $records[$i]["buy_price"], $records[$i]["dauer"]);
-    $min = htmlspecialchars($_POST["min"]);
-    $max = htmlspecialchars($_POST["max"]);
-    $min = number_format((float)$min, 2);
-    echo gettype($min);
-    echo $restwert;
-    if ($restwert > $min or $restwert < $max) {
-        $records[$i]["restwert"] = $restwert;
-        array_push($validRecords, $records[$i]);
-    }
-}
-
-echo "<pre>";
-var_dump($validRecords);
-echo "</pre>";
+// calc the sum of all "Restwerte"
+$summeRestwerte = $inventar->calcTotal();
 ?>
 
 <div class="content-inner">
     <?php
     if (empty($records)) {
-        echo "<h2>Keine Einträge vorhanden</h2>";
+        echo <<<END
+        <h2>Keine Einträge vorhanden</h2>
+        END;
     } else {
     ?>
         <h2>Wähle Kritierien aus: </h2>
@@ -83,12 +62,8 @@ echo "</pre>";
                 ?>
             </select>
             <input type="number" name="min" steps="0.01" min="0" placeholder="Restwert größer als" value="0">
-            <input type="number" name="max" steps="0.01" placeholder="Restwert kleiner als" value="99999999999999">
+            <input type="number" name="max" steps="0.01" placeholder="Restwert kleiner als" value="<?php echo floatval($summeRestwerte); ?>">
             <button type="submit" class="btn btn-primary">Suchen</button>
-        </form>
-        <form action="" method="post" class="form-wrapper spacer">
-            <input type="text" name="search" placeholder="Geben sie einen Begriff ein zum suchen: ">
-            <button type="submit">Suchen</button>
         </form>
         <table id="show-table">
             <form method="post" action="">
@@ -102,21 +77,19 @@ echo "</pre>";
                     <th>Nutzungsdauer</th>
                     <th>Filiale</th>
                     <th>Abteilung</th>
-                    <th>Löschen</th>
                 </thead>
                 <tbody>
 
                     <?php
                     foreach ($records as $record) {
-                        $id = $record["i_id"];
-                        $name = $record["name"];
-                        $typ = $record["typ"];
-                        $datum = $record["buy_date"];
-                        $preis = $record["buy_price"];
-                        $dauer = $record["dauer"];
-                        $restwert = $record["restwert"];
-                        $filiale = $record["filiale"];
-                        $abteilung = $record["abteilung"];
+                        $name = $record->name;
+                        $typ = $record->typ;
+                        $datum = $record->anschaffungsDatum;
+                        $preis = number_format((float)$record->anschaffungsPreis, 2);
+                        $dauer = $record->dauer;
+                        $restwert = number_format((float)$record->restwert, 2);
+                        $filiale = $record->filiale;
+                        $abteilung = $record->abteilung;
 
                         echo <<<END
                      <tr>
@@ -128,7 +101,6 @@ echo "</pre>";
                      <td>$dauer Jahre</td>
                      <td>$filiale</td>
                      <td>$abteilung</td>
-                     <td class="action"><button type="submit" value="$id" name="delete">Löschen</td>
                      </tr>
                      END;
                     }
@@ -143,7 +115,7 @@ echo "</pre>";
             </span>
             <span>
                 <?php
-                echo number_format((float)$inventar->summeRestwert, 2) . "€";
+                echo number_format((float)$summeRestwerte, 2) . "€";
                 ?>
             </span>
         </div>

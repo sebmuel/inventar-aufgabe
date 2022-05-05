@@ -429,7 +429,8 @@ class Inventar
     private Abteilung $abteilungen;
     private Filiale $filialen;
 
-    public float $summeRestwert = 0;
+    public array $entries  = [];
+    public float $summeRestwerte = 0;
 
     public function __construct()
     {
@@ -486,7 +487,7 @@ class Inventar
      * @param  string $filiale
      * @return array
      */
-    public function getRecords($typ, $abteilung, $filiale)
+    public function getRecords($typ = "%%", $abteilung = "%%", $filiale = "%%")
     {
         $statement = "SELECT * FROM Inventar WHERE typ LIKE ? AND abteilung LIKE ? AND filiale LIKE ?";
         $prepare = array($typ, $abteilung, $filiale);
@@ -502,21 +503,121 @@ class Inventar
         $_SESSION["message"] = "Inventar mit der Id: $id gelöscht!";
     }
 
+    public function entries()
+    {
+        $entries = $this->getRecords();
+        foreach ($entries as $entry) {
+            $id = $entry["i_id"];
+            $name = $entry["name"];
+            $typ = $entry["typ"];
+            $datum = $entry["buy_date"];
+            $preis = $entry["buy_price"];
+            $dauer = $entry["dauer"];
+            $filiale = $entry["filiale"];
+            $abteilung = $entry["abteilung"];
+            $entry = new InventarEntry($id, $name, $preis, $datum, $dauer, $typ, $filiale, $abteilung);
+            array_push($this->entries,  $entry);
+        }
+        return $entries;
+    }
+
+    public function calcTotal()
+    {
+        if (!empty($this->entries)) {
+            foreach ($this->entries as $entry) {
+                $this->summeRestwerte += $entry->restwert;
+            }
+            return $this->summeRestwerte;
+        }
+    }
+
+    public function filter(array $filters, array $records)
+    {
+        $min = floatval(htmlspecialchars($filters["min"]));
+        $max = floatval(htmlspecialchars($filters["max"]));
+        $abteilung = htmlspecialchars($filters["abteilung"]);
+        $filiale = htmlspecialchars($filters["filiale"]);
+        $typ = htmlspecialchars($filters["typ"]);
+
+        $filtered = array();
+
+        foreach ($records as $record) {
+            $restwert = $record->restwert;
+            $valid = true;
+
+            if ($restwert < $min or $restwert > $max) {
+                $valid = false;
+            }
+            if ($record->abteilung !== $abteilung and $abteilung !== "%%") {
+                $valid = false;
+            }
+            if ($record->filiale !== $filiale and $filiale !== "%%") {
+                $valid = false;
+            }
+            if ($record->typ !== $typ and $typ !== "%%") {
+                $valid = false;
+            }
+            if ($valid === true) {
+                array_push($filtered, $record);
+            } else {
+                $this->summeRestwerte -= $restwert;
+            }
+        }
+        return $filtered;
+    }
+}
+
+
+class InventarEntry
+{
+    public $id;
+    public $name;
+    public $anschaffungsPreis;
+    public float $restwert;
+    public $anschaffungsDatum;
+    public $dauer;
+    public $typ;
+    public $filiale;
+    public $abteilung;
+
+    public function __construct($id, $name, $anschaffungsPreis, $anschaffungsDatum, $dauer, $typ, $filiale, $abteilung)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->anschaffungsPreis = $anschaffungsPreis;
+        $this->anschaffungsDatum = $anschaffungsDatum;
+        $this->dauer = $dauer;
+        $this->typ = $typ;
+        $this->filiale = $filiale;
+        $this->abteilung = $abteilung;
+        $this->restwert = $this->residualValue($anschaffungsDatum, $anschaffungsPreis, $dauer);
+    }
+
+    /**
+     * residualValue
+     * method to calculate the "Aktuelle Restwert" 
+     * 
+     * @param  mixed $anschaffungsDatum
+     * @param  mixed $preis
+     * @param  mixed $dauer
+     * @return float
+     */
     public function residualValue($anschaffungsDatum, $preis, $dauer)
     {
         $heute = new DateTime();
+        $preis = floatval($preis);
         $anschaffungsDatum = new DateTime($anschaffungsDatum);
         $jahreVergangen = $heute->diff($anschaffungsDatum);
         $jahreVergangen = $jahreVergangen->y;
         $abschreibungsBetrag = $preis / $dauer;
         $rest = $preis;
-
+        echo $preis . "<br>";
         for ($i = 0; $i < $jahreVergangen; ++$i) {
             $rest = $rest - $abschreibungsBetrag;
         }
 
-        $this->summeRestwert += $rest;
-        $rest = ($rest < 1) ? 1 : doubleval($rest);;
-        return number_format((float)$rest, 2);
+        $rest = ($rest < 1) ? 1 : doubleval($rest);
+        $rest = floatval($rest);
+        return $rest;
     }
 }

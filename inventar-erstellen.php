@@ -14,7 +14,6 @@ $abteilungen = $inventar->getAbteilung();
 $filialen = $inventar->getFiliale();
 
 
-
 if ($_SERVER["REQUEST_METHOD"] === "POST" and !empty($_POST)) {
     $values['name'] = htmlspecialchars($_POST["name"]);
     $values['typ'] = htmlspecialchars($_POST["typ"]);
@@ -23,6 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and !empty($_POST)) {
     $values['dauer'] = htmlspecialchars($_POST["dauer"]);
     $values['abteilung'] = htmlspecialchars($_POST["abteilung"]);
     $values['filiale']  = htmlspecialchars($_POST["filiale"]);
+    echo "<pre>";
+    var_dump($values);
+    echo "</pre>";
     $inventar->saveInventar($values);
     header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
     exit();
