@@ -244,7 +244,7 @@ class Auth
 
     /**
      * saveUser
-     * save a single user
+     * save a user
      *
      * @param  string $username
      * @param  string $hash
